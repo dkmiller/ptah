@@ -1,0 +1,6 @@
+site_name: Ptah
+nav:
+  - Home: index.md
+
+theme:
+  name: material
