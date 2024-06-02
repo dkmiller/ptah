@@ -15,7 +15,6 @@ jobs:
       matrix:
         os:
         - macos-latest
-        - macos-latest-large # Apple silicon macOS
         - ubuntu-latest
         - windows-latest
         python-version:
