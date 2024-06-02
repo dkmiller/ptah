@@ -16,3 +16,6 @@ doc = [
     "mkdocs==1.6.0",
     "mkdocs-material==9.5.25",
 ]
+
+[tool.setuptools.package-data]
+ptah = ["**/*.py"]
