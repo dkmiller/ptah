@@ -10,11 +10,11 @@ dependencies = []
 [project.optional-dependencies]
 dev = [
     "build==1.2.1",
-    "ruff==0.5.5",
+    "ruff==0.6.3",
 ]
 doc = [
-    "mkdocs==1.6.0",
-    "mkdocs-material==9.5.30",
+    "mkdocs==1.6.1",
+    "mkdocs-material==9.5.34",
 ]
 
 [tool.setuptools.package-data]
