@@ -4,3 +4,7 @@ hosting.
 
 Under construction: more coming soon!
 """
+
+from ptah.clients import Version, get
+
+__version__ = get(Version).version()

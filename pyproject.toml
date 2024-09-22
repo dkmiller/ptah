@@ -1,21 +1,36 @@
 [project]
+# TODO: 
 name = "ptah-cli"
 readme = "README.md"
 version = "0.0.1"
 authors = [
     { name = "Dan Miller", email = "daniel.keegan.miller@gmail.com" }
 ]
-requires-python = ">=3.9,<3.13"
-dependencies = []
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "injector>=0.21.0",
+    "omegaconf>=2.3.0",
+    "typer>=0.12.3",
+]
+
 [project.optional-dependencies]
 dev = [
     "build==1.2.1",
+    "isort==5.11.5",
+    "pytest==7.4.3",
     "ruff==0.4.7",
 ]
 doc = [
     "mkdocs==1.6.0",
     "mkdocs-material==9.5.25",
 ]
+
+[project.scripts]
+ptah = "ptah.cli:app"
+
+[tool.isort]
+known_local_folder = ["ptah"]
+profile = "black"
 
 [tool.setuptools.package-data]
 ptah = ["**/*.py"]
