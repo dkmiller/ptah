@@ -2,7 +2,6 @@ import typer
 
 from ptah.clients import Kind, ProjectClient, get
 
-
 app = typer.Typer()
 
 

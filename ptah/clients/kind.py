@@ -6,6 +6,7 @@ from injector import inject
 from ptah.clients.shell import ShellClient
 from ptah.models import OperatingSystem, Project
 
+
 @inject
 @dataclass
 class Kind:
@@ -38,4 +39,6 @@ class Kind:
 
     def create(self, project: Project):
         if project.kind.name not in self.clusters():
-            self.shell("kind", "create", "cluster", "--name", project.kind.name, "--wait", "2m")
+            self.shell(
+                "kind", "create", "cluster", "--name", project.kind.name, "--wait", "2m"
+            )

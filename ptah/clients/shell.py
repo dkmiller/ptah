@@ -18,7 +18,9 @@ class ShellClient:
         """
         syntax = Syntax(" ".join(args), "bash")
         with console.status(syntax):
-            result = subprocess.run(args, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+            result = subprocess.run(
+                args, stderr=subprocess.PIPE, stdout=subprocess.PIPE
+            )
 
             if result.returncode != 0:
                 # https://johnlekberg.com/blog/2020-04-03-codec-errors.html

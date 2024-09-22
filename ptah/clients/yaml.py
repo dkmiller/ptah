@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Type, TypeVar
-from omegaconf import OmegaConf
 
+from omegaconf import OmegaConf
 
 T = TypeVar("T")
 
