@@ -18,11 +18,11 @@ dev = [
     "build==1.2.1",
     "isort==5.11.5",
     "pytest==7.4.3",
-    "ruff==0.4.7",
+    "ruff==0.6.3",
 ]
 doc = [
-    "mkdocs==1.6.0",
-    "mkdocs-material==9.5.25",
+    "mkdocs==1.6.1",
+    "mkdocs-material==9.5.34",
 ]
 
 [project.scripts]
