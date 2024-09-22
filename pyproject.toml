@@ -1,8 +1,7 @@
 [project]
-# TODO: 
 name = "ptah-cli"
 readme = "README.md"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
     { name = "Dan Miller", email = "daniel.keegan.miller@gmail.com" }
 ]
@@ -31,6 +30,9 @@ ptah = "ptah.cli:app"
 [tool.isort]
 known_local_folder = ["ptah"]
 profile = "black"
+
+[tool.ruff.lint.per-file-ignores]
+"**/__init__.py" = ["F401"]
 
 [tool.setuptools.package-data]
 ptah = ["**/*.py"]
