@@ -60,9 +60,9 @@ jobs:
         junit_files: coverage.xml
 
     - if: ${{ steps.singleton.outputs.value }}
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
-        fail_ci_if_error: true
+        use_oidc: true
 
     - uses: actions/upload-artifact@v4
       with:
