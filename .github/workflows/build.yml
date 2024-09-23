@@ -46,7 +46,7 @@ jobs:
     - uses: haya14busa/action-cond@v1
       id: singleton
       with:
-        cond: ${{ matrix.os == 'ubuntu-latest' && matrix.python-version == '3.8' && github.actor != 'dependabot[bot]' }}
+        cond: ${{ matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12' && github.actor != 'dependabot[bot]' }}
         if_true: true
 
     - if: ${{ steps.singleton.outputs.value }}
