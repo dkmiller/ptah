@@ -8,6 +8,13 @@ on:
     branches:
     - main
 
+permissions:
+  checks: write
+  contents: read
+  id-token: write
+  pull-requests: write
+  pages: write
+
 jobs:
 
   python:
@@ -31,7 +38,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - run: pip install .[dev]
+    - run: pip install -e .[dev]
 
     - run: ruff check .
 
@@ -48,6 +55,17 @@ jobs:
       with:
         cond: ${{ matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12' && github.actor != 'dependabot[bot]' }}
         if_true: true
+
+    - if: ${{ steps.singleton.outputs.value }}
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        junit_files: coverage.xml
+
+    - if: ${{ steps.singleton.outputs.value }}
+      uses: codecov/codecov-action@v4
+      with:
+        use_oidc: true
 
     - uses: actions/upload-artifact@v4
       with:
