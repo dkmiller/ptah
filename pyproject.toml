@@ -31,6 +31,9 @@ ptah = "ptah.cli:app"
 known_local_folder = ["ptah"]
 profile = "black"
 
+[tool.pytest.ini_options]
+addopts = "--cov=ptah --junitxml=coverage.xml"
+
 [tool.ruff.lint.per-file-ignores]
 "**/__init__.py" = ["F401"]
 
