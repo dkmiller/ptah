@@ -7,3 +7,22 @@
 
 Kubernetes development toolkit, with a focus on rapid iteration and local
 hosting.
+
+## Development
+
+To install the Ptah CLI from source, either pip install directly:
+
+```bash
+pip install -e ".[dev]"
+```
+
+or, if you do not have a compatible version of Python,
+[install Miniforge](https://github.com/conda-forge/miniforge) then create the `ptah` environment
+[from the file](https://stackoverflow.com/a/59686678) in this repo.
+
+```bash
+conda env create -f conda.yml
+```
+
+Try to add documentation for any new feature you build. When possible it should follow
+[Diátaxis](https://diataxis.fr/).
