@@ -5,7 +5,7 @@ version = "0.1.0"
 authors = [
     { name = "Dan Miller", email = "daniel.keegan.miller@gmail.com" }
 ]
-requires-python = ">=3.11,<3.13"
+requires-python = ">=3.11,<3.14"
 dependencies = [
     "cachelib>=0.13.0",
     "injector>=0.21.0",
