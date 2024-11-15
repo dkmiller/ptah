@@ -1,4 +1,5 @@
 import typer
+from typer.main import get_command
 
 from ptah.clients import Forward, Helmfile, Kind, Project, Version, get
 
@@ -33,6 +34,8 @@ def deploy():
     helm.build()
     helm.apply()
 
+    # TODO: kill and then re-forward?
+
 
 @app.command()
 def forward(kill: bool = False):
@@ -58,3 +61,7 @@ def nuke():
     kind = get(Kind)
     project = get(Project).load()
     kind.delete(project)
+
+
+# For docs
+click_command = get_command(app)
