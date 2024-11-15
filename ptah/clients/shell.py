@@ -18,6 +18,9 @@ class Shell:
 
     def run(self, args: List[str]) -> str:
         """
+        Run the provided set of arguments, providing a friendly "in progress" message to the
+        console, then return the (stripped and decoded) standard output.
+
         TODO: follow https://janakiev.com/blog/python-shell-commands/ and stream output.
         """
         syntax = Syntax(" ".join(args), "bash")
@@ -36,4 +39,4 @@ class Shell:
                 self.console.print(syntax)
                 sys.exit(result.returncode)
 
-        return result.stdout.decode(errors="replace")
+        return result.stdout.decode(errors="replace").strip()
