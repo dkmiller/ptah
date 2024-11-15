@@ -6,7 +6,7 @@ nav:
   - Tutorials:
     - First project: tutorials/first-project.md
   - Reference:
-    - ptah.yml: reference/config.md
+    - ptah.yml: reference/project.md
   - FAQ: faq.md
 
 theme:
