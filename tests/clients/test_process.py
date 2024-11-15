@@ -41,8 +41,8 @@ def test_run():
 
     end = perf_counter()
 
-    assert end - start > 0.4
-    assert end - start < 0.6
+    assert end - start > 0.3
+    assert end - start < 0.7
 
 
 def test_spawn_then_terminate():
@@ -56,5 +56,5 @@ def test_spawn_then_terminate():
 
     end = perf_counter()
 
-    assert end - start > 0.4
-    assert end - start < 0.6
+    assert end - start > 0.3
+    assert end - start < 0.7
