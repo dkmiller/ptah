@@ -3,6 +3,6 @@ from .filesystem import Filesystem
 from .forward import Forward
 from .helmfile import Helmfile
 from .kind import Kind
-from .project import ProjectClient
+from .project import Project
 from .version import Version
 from .yaml import Yaml

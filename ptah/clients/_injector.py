@@ -5,8 +5,9 @@ from cachelib import BaseCache, FileSystemCache
 from injector import Injector, Module, provider, singleton
 from rich.console import Console
 
-from ptah.clients.project import ProjectClient
-from ptah.models import OperatingSystem, Project
+from ptah.clients.project import Project
+from ptah.models import OperatingSystem
+from ptah.models import Project as ProjectModel
 
 T = TypeVar("T")
 
@@ -37,7 +38,7 @@ class Builder(Module):
 
     @singleton
     @provider
-    def project(self, client: ProjectClient) -> Project:
+    def project(self, client: Project) -> ProjectModel:
         return client.load()
 
 

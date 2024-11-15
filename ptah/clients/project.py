@@ -6,15 +6,15 @@ from injector import inject
 
 from ptah.clients.filesystem import Filesystem
 from ptah.clients.yaml import Yaml
-from ptah.models import Project
+from ptah.models import Project as Model
 
 
 @inject
 @dataclass
-class ProjectClient:
+class Project:
     filesystem: Filesystem
     yaml: Yaml
 
-    def load(self, path: Optional[Path] = None) -> Project:
+    def load(self, path: Optional[Path] = None) -> Model:
         path = path or self.filesystem.project_path()
-        return self.yaml.load(path, Project)
+        return self.yaml.load(path, Model)

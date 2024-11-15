@@ -1,6 +1,6 @@
 import typer
 
-from ptah.clients import Forward, Helmfile, Kind, ProjectClient, Version, get
+from ptah.clients import Forward, Helmfile, Kind, Project, Version, get
 
 app = typer.Typer()
 
@@ -10,7 +10,7 @@ def project():
     """
     Echo the current project configuration, including default values, to standard output.
     """
-    print(get(ProjectClient).load())
+    print(get(Project).load())
 
 
 @app.command()
@@ -25,7 +25,7 @@ def version():
 def deploy():
     kind = get(Kind)
     kind.ensure_installed()
-    project = get(ProjectClient).load()
+    project = get(Project).load()
     kind.create(project)
 
     helm = get(Helmfile)
@@ -52,6 +52,9 @@ def nuke():
     """
     Forcibly delete the Kind cluster and all related resources.
     """
+    forward = get(Forward)
+    forward.terminate()
+
     kind = get(Kind)
-    project = get(ProjectClient).load()
+    project = get(Project).load()
     kind.delete(project)
