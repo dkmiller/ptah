@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from injector import inject
+from rich.console import Console
 
 from ptah.clients.filesystem import Filesystem
 from ptah.clients.shell import Shell
@@ -16,6 +17,7 @@ class Helmfile:
     Wrap interactions with the [Helmfile](https://github.com/helmfile/helmfile) CLI.
     """
 
+    console: Console
     filesystem: Filesystem
     os: OperatingSystem
     shell: Shell
@@ -48,11 +50,11 @@ class Helmfile:
     def build(self, target: Path | None = None) -> None:
         target = target or self.filesystem.project_path().parent
         if self.helmfile_exists(target):
-            print("Syncing Helmfile")
+            self.console.print("Syncing Helmfile")
             self.shell("helmfile", "sync")
 
     def apply(self, target: Path | None = None) -> None:
         target = target or self.filesystem.project_path().parent
         if self.helmfile_exists(target):
-            print("Applying Helmfile")
+            self.console.print("Applying Helmfile")
             self.shell("helmfile", "apply")

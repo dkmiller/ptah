@@ -7,6 +7,7 @@ from injector import inject
 from rich.console import Console
 from rich.syntax import Syntax
 
+
 @inject
 @dataclass
 class Shell:
