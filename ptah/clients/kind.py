@@ -3,7 +3,8 @@ from dataclasses import dataclass
 
 from injector import inject
 
-from ptah.clients.shell import ShellClient
+from ptah.clients.caching import cache_ignore_inputs
+from ptah.clients.shell import Shell
 from ptah.models import OperatingSystem, Project
 
 
@@ -15,7 +16,11 @@ class Kind:
     """
 
     os: OperatingSystem
-    shell: ShellClient
+    shell: Shell
+
+    def ensure_installed(self):
+        if not self.is_installed():
+            self.install()
 
     def is_installed(self) -> bool:
         return bool(shutil.which(("kind")))
@@ -34,6 +39,7 @@ class Kind:
 
         self.shell.run(args)
 
+    @cache_ignore_inputs
     def clusters(self) -> list[str]:
         return self.shell("kind", "get", "clusters").splitlines()
 
@@ -42,3 +48,6 @@ class Kind:
             self.shell(
                 "kind", "create", "cluster", "--name", project.kind.name, "--wait", "2m"
             )
+
+    def delete(self, project: Project):
+        self.shell("kind", "delete", "clusters", project.kind.name)

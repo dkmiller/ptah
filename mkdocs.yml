@@ -3,9 +3,22 @@ nav:
   - Home: index.md
   - Guides:
     - Installation: guides/install.md
+  - Tutorials:
+    - First project: tutorials/first-project.md
   - Reference:
-    - ptah.yml: reference/config.md
+    - ptah.yml: reference/project.md
   - FAQ: faq.md
 
 theme:
   name: material
+  features:
+    - content.code.copy
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences

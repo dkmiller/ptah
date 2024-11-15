@@ -1,14 +1,28 @@
 import platform
 from typing import Type, TypeVar
 
+from cachelib import BaseCache, FileSystemCache
 from injector import Injector, Module, provider, singleton
+from rich.console import Console
 
+from ptah.clients.project import Project
 from ptah.models import OperatingSystem
+from ptah.models import Project as ProjectModel
 
 T = TypeVar("T")
 
 
 class Builder(Module):
+    @singleton
+    @provider
+    def cache(self) -> BaseCache:
+        return FileSystemCache(".ptah")
+
+    @singleton
+    @provider
+    def console(self) -> Console:
+        return Console()
+
     @singleton
     @provider
     def operating_system(self) -> OperatingSystem:
@@ -21,6 +35,11 @@ class Builder(Module):
                 return OperatingSystem.WINDOWS
             case default:
                 raise RuntimeError(f"Unknown operating system {default}")
+
+    @singleton
+    @provider
+    def project(self, client: Project) -> ProjectModel:
+        return client.load()
 
 
 def get(interface: Type[T]) -> T:

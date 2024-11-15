@@ -1,5 +1,5 @@
 # Installing Ptah
 
-```bash
+``` bash
 pip3 install --upgrade ptah-cli
 ```
