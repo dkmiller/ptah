@@ -8,4 +8,7 @@ Here is an example illustrating the expected structure.
 ```yaml
 kind:
   name: your_kind_cluster_name
+
+api_server:
+  port: 9263 # Port for the Kubernetes API server
 ```

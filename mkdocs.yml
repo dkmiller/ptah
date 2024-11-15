@@ -3,6 +3,8 @@ nav:
   - Home: index.md
   - Guides:
     - Installation: guides/install.md
+  - Tutorials:
+    - First project: tutorials/first-project.md
   - Reference:
     - ptah.yml: reference/config.md
   - FAQ: faq.md
