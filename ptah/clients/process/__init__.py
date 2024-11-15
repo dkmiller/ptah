@@ -22,12 +22,7 @@ class Process:
 
     def run(self, args: List[str]) -> None:
         """
-        Run the process `args`, propagating terminate signals. You can debug for processes on a
-        port with
-
-        ```bash
-        lsof -n -i :8001
-        ```
+        Run the process `args`, propagating terminate signals.
         """
         print(f"Running {args}")
 

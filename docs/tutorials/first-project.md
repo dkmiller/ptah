@@ -21,8 +21,7 @@ The output should include a version number.
 
 ## Project
 
-Now that we have installed the prerequisites, let's create a
-[Ptah project](../reference/project.md). Create a directory to contain it
+Now, let's create a [Ptah project](../reference/project.md). Create a directory to contain it
 
 ``` bash
 mkdir minimal
@@ -38,33 +37,38 @@ kind:
 ' > ptah.yml
 ```
 
-then a minimal [Helmfile](https://helmfile.readthedocs.io/en/latest/#getting-started).
+then a minimal [Helmfile](https://helmfile.readthedocs.io/en/latest/#getting-started). Let's check
+that we have a valid project: the command
 
-the output of `ls -R` should look like
-
-``` log
-helmfile.yaml	ptah.yml
+``` bash
+ptah project
 ```
+
+should print something including the `name` you specified above.
 
 ## Deployment
 
-Run
+Now that we have created a Ptah project, we can deploy it. We must always run `ptah ...` commands
+in a (sub)directory of the folder containing `ptah.yml`, just like `git` commands only work inside
+a Git repo.
 
-Must always run `ptah` commands in the context of a `ptah` project, just like the `git` CLI and
-Git repos.
+Run the command below; this will take 2&ndash;3 minutes to complete.
 
 ``` bash
 ptah deploy
 ```
 
-(this will take 2&ndash;3 minutes)
+Let's checked that this worked: run `kubectl get pods`; the output should look something like
+this.
 
-Let's checked that this worked: run `kubectl get pods`
+``` log
+NAME                                  READY   STATUS    RESTARTS   AGE
+kubernetes-dashboard-57b69f47-f7n8z   1/1     Running   0          31m
+```
 
-Then run `ptah forward` and interact with one of the port-forwarded services.
+Then, run `ptah forward` and interact with one of the port-forwarded services.
 
-Oops! Need service account: add one, `ptah deploy` again.
+Finally, run `ptah nuke` to clean up your Kind cluster and port-forwarding background processes.
 
-Remember that we already deployed the cluster; it should be much faster this time.
-
-You have deployed a Kubernetes cluster, UI, and interacted with these, and made changes.
+Congratulations, you have deployed a Kind cluster along with some resources, interacted with
+those via port-forwarding, and cleaned everything up.
