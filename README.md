@@ -24,5 +24,11 @@ or, if you do not have a compatible version of Python,
 conda env create -f conda.yml
 ```
 
+Run automatic formatting / lint fixes via
+
+```bash
+ruff check --fix . && ruff format . && isort .
+```
+
 Try to add documentation for any new feature you build. When possible it should follow
 [Diátaxis](https://diataxis.fr/).

@@ -1,0 +1,11 @@
+repositories:
+- name: k8s-dashboard
+  url: https://kubernetes.github.io/dashboard
+releases:
+- name: kubernetes-dashboard
+  chart: k8s-dashboard/kubernetes-dashboard
+  version: 6.0.8
+  values:
+  - name:
+      fullnameOverride: kubernetes-dashboard
+  - ProtocolHttp: true
