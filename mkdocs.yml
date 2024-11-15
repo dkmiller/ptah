@@ -7,6 +7,7 @@ nav:
     - First project: tutorials/first-project.md
   - Reference:
     - ptah.yml: reference/project.md
+    - CLI: reference/cli.md
   - FAQ: faq.md
 
 theme:
@@ -15,6 +16,7 @@ theme:
     - content.code.copy
 
 markdown_extensions:
+  - mkdocs-click
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span

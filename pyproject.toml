@@ -25,6 +25,7 @@ dev = [
 ]
 doc = [
     "mkdocs==1.6.1",
+    "mkdocs-click==0.8.1",
     "mkdocs-material==9.5.43",
 ]
 
