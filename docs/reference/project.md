@@ -7,7 +7,7 @@ Here is an example illustrating the expected structure, including a
 [Kind](https://kind.sigs.k8s.io/docs/user/configuration/) cluster name and
 [Kubernetes API](https://kubernetes.io/docs/concepts/overview/kubernetes-api/) port.
 
-```yaml
+``` yaml
 kind:
   name: your_kind_cluster_name
 
