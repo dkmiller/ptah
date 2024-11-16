@@ -19,7 +19,7 @@ class Filesystem:
 
     def delete(self, path: Path) -> None:
         """
-        Safely!!!
+        Attempt to recursively delete the provided path, failing silently and safely.
         """
         try:
             shutil.rmtree(path)

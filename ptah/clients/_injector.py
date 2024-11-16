@@ -17,7 +17,7 @@ class Builder(Module):
     @singleton
     @provider
     def cache(self, filesystem: Filesystem) -> BaseCache:
-        return FileSystemCache(filesystem.cache_location())
+        return FileSystemCache(str(filesystem.cache_location()))
 
     @singleton
     @provider
