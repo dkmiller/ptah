@@ -1,4 +1,7 @@
 site_name: Ptah
+repo_url: https://github.com/dkmiller/ptah
+repo_name: dkmiller/ptah
+
 nav:
   - Home: index.md
   - Guides:
