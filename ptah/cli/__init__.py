@@ -63,5 +63,5 @@ def nuke():
     kind.delete(project)
 
 
-# For docs
-click_command = get_command(app)
+# Create a "nicely named" Click command object for generated docs.
+ptah = get_command(app)
