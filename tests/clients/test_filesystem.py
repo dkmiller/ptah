@@ -2,7 +2,7 @@ from uuid import uuid4
 
 import pytest
 
-from ptah.clients import Filesystem, get
+from ptah.clients import Filesystem, PtahPanic, get
 from ptah.models import PACKAGE_NAME
 
 
@@ -22,10 +22,10 @@ def test_pyproject():
 def test_project_path_when_none_exists():
     filesystem = get(Filesystem)
 
-    with pytest.raises(RuntimeError) as exc_info:
+    with pytest.raises(PtahPanic) as exc_info:
         filesystem.project_path()
 
-    assert "Could not find project file" in exc_info.value.args[0]
+    assert exc_info.value.args[0] == 1
 
 
 @pytest.mark.parametrize("depth", [1, 5, 10])

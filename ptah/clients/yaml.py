@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Type, TypeVar
+from typing import Any, Type, TypeVar
 
 from omegaconf import OmegaConf
 
@@ -12,3 +12,6 @@ class Yaml:
         conf = OmegaConf.load(path)
         merged = OmegaConf.merge(schema, conf)
         return OmegaConf.to_object(merged)  # type: ignore
+
+    def dumps(self, object: Any) -> str:
+        return OmegaConf.to_yaml(object)

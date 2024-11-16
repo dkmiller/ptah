@@ -1,17 +1,39 @@
+import json
+from dataclasses import asdict
+
 import typer
 from typer.main import get_command
 
-from ptah.clients import Forward, Helmfile, Kind, Project, Version, get
+from ptah.clients import (
+    Dashboard,
+    Filesystem,
+    Forward,
+    Helmfile,
+    Kind,
+    Kubernetes,
+    Project,
+    Version,
+    Yaml,
+    get,
+)
+from ptah.models import Serialization
 
 app = typer.Typer()
 
 
 @app.command()
-def project():
+def project(output: Serialization = Serialization.yaml):
     """
-    Echo the current project configuration, including default values, to standard output.
+    Echo the current project configuration, including default values, to standard output using
+    the specified format.
     """
-    print(get(Project).load())
+    deserialized = get(Project).load()
+    match output:
+        case Serialization.json:
+            serialized = json.dumps(asdict(deserialized), indent=3)
+        case Serialization.yaml:
+            serialized = get(Yaml).dumps(deserialized)
+    print(serialized)
 
 
 @app.command()
@@ -23,7 +45,15 @@ def version():
 
 
 @app.command()
+def build():
+    k8s = get(Kubernetes)
+    k8s.build()
+
+
+@app.command()
 def deploy():
+    build()
+
     kind = get(Kind)
     kind.ensure_installed()
     project = get(Project).load()
@@ -34,7 +64,10 @@ def deploy():
     helm.build()
     helm.apply()
 
-    # TODO: kill and then re-forward?
+    get(Kubernetes).apply()
+
+    forward(kill=True)
+    forward(kill=False)
 
 
 @app.command()
@@ -51,6 +84,11 @@ def forward(kill: bool = False):
 
 
 @app.command()
+def dashboard():
+    get(Dashboard).open()
+
+
+@app.command()
 def nuke():
     """
     Forcibly delete the Kind cluster and all related resources.
@@ -61,6 +99,9 @@ def nuke():
     kind = get(Kind)
     project = get(Project).load()
     kind.delete(project)
+
+    filesystem = get(Filesystem)
+    filesystem.delete(filesystem.cache_location())
 
 
 # Create a "nicely named" Click command object for generated docs.

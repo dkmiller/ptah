@@ -1,10 +1,31 @@
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
+import shutil
 
+from injector import inject
+
+from ptah.clients.panic import Panic
 from ptah.models import PROJECT_FILE
 
 
+@inject
+@dataclass
 class Filesystem:
+    panic: Panic
+
+    def cache_location(self) -> Path:
+        return self.project_root() / ".ptah"
+
+    def delete(self, path: Path) -> None:
+        """
+        Safely!!!
+        """
+        try:
+            shutil.rmtree(path)
+        except FileNotFoundError:
+            pass
+
     def package_root(self) -> Path:
         """
         Fully qualified absolute path to the root of the package.
@@ -17,9 +38,10 @@ class Filesystem:
             rv = candidate / PROJECT_FILE
             if rv.is_file():
                 return rv
-        raise RuntimeError(
-            f"Could not find project file {PROJECT_FILE} in current location or parent(s)"
-        )
+        self.panic(f"No file {PROJECT_FILE} in current location or parent(s)")
+
+    def project_root(self, location: Optional[Path] = None) -> Path:
+        return self.project_path(location).parent
 
     def pyproject(self) -> Path:
         return self.package_root().parent / "pyproject.toml"

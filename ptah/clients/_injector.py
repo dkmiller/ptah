@@ -5,6 +5,7 @@ from cachelib import BaseCache, FileSystemCache
 from injector import Injector, Module, provider, singleton
 from rich.console import Console
 
+from ptah.clients.filesystem import Filesystem
 from ptah.clients.project import Project
 from ptah.models import OperatingSystem
 from ptah.models import Project as ProjectModel
@@ -15,8 +16,8 @@ T = TypeVar("T")
 class Builder(Module):
     @singleton
     @provider
-    def cache(self) -> BaseCache:
-        return FileSystemCache(".ptah")
+    def cache(self, filesystem: Filesystem) -> BaseCache:
+        return FileSystemCache(filesystem.cache_location())
 
     @singleton
     @provider
