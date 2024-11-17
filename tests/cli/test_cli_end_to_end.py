@@ -4,9 +4,12 @@ from pathlib import Path
 import pytest
 from pytest import fixture
 
-from ptah.cli import build, project
+from ptah.cli import build, project, deploy, nuke
 from ptah.clients import get
 from ptah.models import OperatingSystem
+
+
+# TODO: systematic way of skipping the slow tests by default.
 
 # https://stackoverflow.com/a/71264963
 if get(OperatingSystem) != OperatingSystem.MACOS:
@@ -28,3 +31,15 @@ def test_project(test_project_cwd):
 
 def test_build(test_project_cwd):
     build()
+
+
+def test_deploy(test_project_cwd):
+    deploy()
+
+
+def test_nuke(test_project_cwd):
+    nuke()
+
+# TODO: https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/#install-with-homebrew-on-macos
+
+# @pytest.mark.timeout(60)
