@@ -1,6 +1,7 @@
 import webbrowser
 from dataclasses import dataclass
 
+import pyperclip
 from injector import inject
 from rich.console import Console
 
@@ -38,6 +39,7 @@ class Dashboard:
         self.console.print(
             f"Copy/pasting the token below and opening the URL:\n\n\t{token}\n\n\t{url}\n"
         )
+        pyperclip.copy(token)
         webbrowser.open(url)
 
     def url(self) -> str:
