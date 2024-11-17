@@ -33,6 +33,7 @@ def test_build(test_project_cwd):
 
 
 def test_deploy(test_project_cwd):
+    assert os.system("brew install docker") == 0
     assert os.system("brew install kubectl") == 0
     deploy()
 
