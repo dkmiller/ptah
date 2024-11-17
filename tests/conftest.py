@@ -1,8 +1,14 @@
 import os
+import random
 from collections.abc import Generator
 from pathlib import Path
 
 from pytest import fixture
+
+
+@fixture
+def port() -> int:
+    return random.randint(49152, 65535)
 
 
 @fixture

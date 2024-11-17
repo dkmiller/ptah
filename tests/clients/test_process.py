@@ -4,6 +4,7 @@ import pytest
 
 from ptah.clients import get
 from ptah.clients.process import Process
+from ptah.models import OperatingSystem
 
 
 @pytest.mark.parametrize(
@@ -51,10 +52,14 @@ def test_spawn_then_terminate():
     start = perf_counter()
 
     process.spawn(args)
-    sleep(0.5)
+    duration = 0.5
+    sleep(duration)
     process.terminate(args)
 
     end = perf_counter()
 
-    assert end - start > 0.3
-    assert end - start < 0.7
+    # Python is strangely slow to boot inside macOS test runners.
+    threshold = 0.3 if get(OperatingSystem) == OperatingSystem.MACOS else 0.1
+
+    # https://stackoverflow.com/a/39623614
+    assert duration == pytest.approx(end - start, threshold)

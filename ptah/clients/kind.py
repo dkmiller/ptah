@@ -16,6 +16,7 @@ class Kind:
     """
 
     os: OperatingSystem
+    project: Project
     shell: Shell
 
     def ensure_installed(self):
@@ -43,11 +44,17 @@ class Kind:
     def clusters(self) -> list[str]:
         return self.shell("kind", "get", "clusters").splitlines()
 
-    def create(self, project: Project):
-        if project.kind.name not in self.clusters():
+    def create(self):
+        if self.project.kind.name not in self.clusters():
             self.shell(
-                "kind", "create", "cluster", "--name", project.kind.name, "--wait", "2m"
+                "kind",
+                "create",
+                "cluster",
+                "--name",
+                self.project.kind.name,
+                "--wait",
+                "2m",
             )
 
-    def delete(self, project: Project):
-        self.shell("kind", "delete", "clusters", project.kind.name)
+    def delete(self):
+        self.shell("kind", "delete", "clusters", self.project.kind.name)

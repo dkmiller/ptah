@@ -1,12 +1,10 @@
-import random
 from pathlib import Path
 
 from ptah.clients import Forward, get
 
 
-def test_commands(tmp_cwd):
+def test_commands(port, tmp_cwd):
     deployments = Path(__file__).parent / "deployments.json"
-    port = random.randint(49152, 65535)
     path = tmp_cwd / "ptah.yml"
     path.write_text(f"""
 kind:

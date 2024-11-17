@@ -27,7 +27,7 @@ conda env create -f conda.yml
 Run automatic formatting / lint fixes via
 
 ```bash
-ruff check --fix . && ruff format . && isort .
+ruff check --fix . && ruff format . && isort . && pyright
 ```
 
 Try to add documentation for any new feature you build. When possible it should follow
