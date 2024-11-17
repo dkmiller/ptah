@@ -8,6 +8,7 @@ from rich.console import Console
 
 from ptah.clients.filesystem import Filesystem
 from ptah.clients.shell import Shell
+from ptah.clients.docker import Docker
 from ptah.models import Project
 
 
@@ -15,6 +16,7 @@ from ptah.models import Project
 @dataclass
 class Kubernetes:
     console: Console
+    docker: Docker
     engine: engine
     filesystem: Filesystem
     project: Project
@@ -35,6 +37,11 @@ class Kubernetes:
 
         for manifest in manifests:
             content = manifest.read_text()
+
+            for image in self.docker.image_definitions():
+                # TODO: regex for "non-word" at the end.
+                content = content.replace(f"ptah://{image.name}", image.uri)
+
             relative = str(manifest.relative_to(source))
             target_path = Path(target) / relative
             target_path.parent.mkdir(parents=True, exist_ok=True)

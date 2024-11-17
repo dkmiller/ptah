@@ -19,15 +19,3 @@ spec:
         image: ptah://fastapi
         ports:
         - containerPort: 8000
-
----
-
-kind: Service
-apiVersion: v1
-metadata:
-  name: fastapi-service
-spec:
-  selector:
-    app: fastapi
-  ports:
-  - port: 8000
