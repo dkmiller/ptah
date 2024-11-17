@@ -24,10 +24,12 @@ class Project:
     api_server: ApiServer = field(default_factory=ApiServer)
     ui: Ui = field(default_factory=Ui)
 
-    # Conceptually:
-    # - regex to look for candidate K8 manifest files.
-    # - relative (to project root) or absolute path for where the built manifests should go
-    #   (this is where kubectl apply will be called).
-
     manifests: str = r"^(?!helmfile).*\.yaml"
+    """
+    Regex to look for candidate K8 manifest files.
+    """
     build_output: str = ".build"
+    """
+    Relative (to project root) or absolute path for where the built manifests should go (this is
+    where kubectl apply will be called).
+    """

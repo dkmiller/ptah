@@ -70,7 +70,5 @@ Then, run `ptah forward` and interact with one of the port-forwarded services.
 
 Finally, run `ptah nuke` to clean up your Kind cluster and port-forwarding background processes.
 
-dashboard: https://stackoverflow.com/a/60264070 sign out then retry.
-
 Congratulations, you have deployed a Kind cluster along with some resources, interacted with
 those via port-forwarding, and cleaned everything up.

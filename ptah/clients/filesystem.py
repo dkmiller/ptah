@@ -5,7 +5,7 @@ from typing import Optional
 
 from injector import inject
 
-from ptah.clients.panic import Panic
+from ptah.clients.panic import Panic, PtahPanic
 from ptah.models import PROJECT_FILE
 
 
@@ -15,7 +15,11 @@ class Filesystem:
     panic: Panic
 
     def cache_location(self) -> Path:
-        return self.project_root() / ".ptah"
+        try:
+            root = self.project_root()
+        except PtahPanic:
+            root = Path.cwd()
+        return root / ".ptah"
 
     def delete(self, path: Path) -> None:
         """

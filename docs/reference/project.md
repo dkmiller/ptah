@@ -13,4 +13,12 @@ kind:
 
 api_server:
   port: 9263 # Port for the Kubernetes API server
+
+ui:
+  service: kubernetes-dashboard # Name of the service hosting the Kubernetes UI
+  user: dashboard-admin # Name of the user to log into the Kubernetes UI with.
+
+manifests: ^(?!helmfile).*\.yaml # Regular expression of Kubernetes manifest files.
+
+build_output: .build # Where to copy rendered manifest files before applying them.
 ```

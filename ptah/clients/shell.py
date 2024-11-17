@@ -11,6 +11,13 @@ from rich.syntax import Syntax
 @inject
 @dataclass
 class Shell:
+    """
+    Handle interactions with the shell.
+
+    Ptah heavily leverages CLIs like `kubectl` instead of the underlying REST APIs to provide
+    easily copy/pasteable commands to users.
+    """
+
     console: Console
 
     def __call__(self, *args: str) -> str:
