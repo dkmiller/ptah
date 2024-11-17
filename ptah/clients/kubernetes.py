@@ -63,10 +63,11 @@ class Kubernetes:
             else:
                 skip += 1
 
-        msg = f"Watching {len(watch)} Kubernetes resources"
+        noun = self.engine.plural("resource", len(watch))  # type: ignore
+        msg = f"Watching {len(watch)} Kubernetes {noun}"
         if skip:
             msg += f" ({skip} unchanged)"
-        print(msg)
+        self.console.print(msg)
 
         for w in watch:
             self.shell.run(w)
