@@ -47,9 +47,10 @@ class Helmfile:
         helmfile = target / "helmfile.yaml"
         return helmfile.is_file()
 
-    def build(self, target: Path | None = None) -> None:
+    def sync(self, target: Path | None = None) -> None:
         target = target or self.filesystem.project_root()
         if self.helmfile_exists(target):
+            self.ensure_installed()
             self.console.print("Syncing Helmfile")
             self.shell("helmfile", "sync")
 

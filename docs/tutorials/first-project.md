@@ -28,16 +28,14 @@ mkdir minimal
 cd minimal/
 ```
 
-then create a file named `ptah.yml`
+then create a file named `ptah.yml` with these contents.
 
-``` bash
-echo '
+``` yaml
 kind:
   name: minimal
-' > ptah.yml
 ```
 
-then a minimal [Helmfile](https://helmfile.readthedocs.io/en/latest/#getting-started). Let's check
+Then, a minimal [Helmfile](https://helmfile.readthedocs.io/en/latest/#getting-started). Let's check
 that we have a valid project: the command
 
 ``` bash
@@ -63,8 +61,10 @@ this.
 
 ``` log
 NAME                                  READY   STATUS    RESTARTS   AGE
-kubernetes-dashboard-57b69f47-f7n8z   1/1     Running   0          31m
+kubernetes-dashboard-57b69f47-f7n8z   1/1     Running   0          3m
 ```
+
+
 
 Then, run `ptah forward` and interact with one of the port-forwarded services.
 

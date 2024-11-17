@@ -46,22 +46,27 @@ def version():
 
 @app.command()
 def build():
+    """
+    Copy all Kubernetes manifests from the current project into the `build_output` directory.
+    """
     k8s = get(Kubernetes)
     k8s.build()
 
 
 @app.command()
 def deploy():
+    """
+    Build the project, ensure the Kind CLI and cluster exit, sync and apply Helm charts, apply
+    Kubernetes manifests, and set up port-forwarding from the cluster to loclhost.
+    """
     build()
 
     kind = get(Kind)
     kind.ensure_installed()
-    project = get(Project).load()
-    kind.create(project)
+    kind.create()
 
     helm = get(Helmfile)
-    helm.ensure_installed()
-    helm.build()
+    helm.sync()
     helm.apply()
 
     get(Kubernetes).apply()
@@ -85,6 +90,9 @@ def forward(kill: bool = False):
 
 @app.command()
 def dashboard():
+    """
+    Open the Kubernetes dashboard with a prepared bearer token for authentication.
+    """
     get(Dashboard).open()
 
 
@@ -93,12 +101,10 @@ def nuke():
     """
     Forcibly delete the Kind cluster and all related resources.
     """
-    forward = get(Forward)
-    forward.terminate()
+    forward(kill=True)
 
     kind = get(Kind)
-    project = get(Project).load()
-    kind.delete(project)
+    kind.delete()
 
     filesystem = get(Filesystem)
     filesystem.delete(filesystem.cache_location())

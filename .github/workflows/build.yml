@@ -49,6 +49,8 @@ jobs:
 
     - run: pytest
 
+    - run: pyright
+
     - run: python -m build --wheel
 
     - uses: haya14busa/action-cond@v1

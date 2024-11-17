@@ -6,6 +6,11 @@ from ptah.clients import Filesystem, PtahPanic, get
 from ptah.models import PACKAGE_NAME
 
 
+def test_delete_when_target_does_not_exist(tmp_path):
+    path = tmp_path / str(uuid4())
+    get(Filesystem).delete(path)
+
+
 def test_package_root_contains_clients():
     filesystem = get(Filesystem)
     clients = filesystem.package_root() / "clients"

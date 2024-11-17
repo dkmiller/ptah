@@ -30,7 +30,7 @@ class Kubernetes:
             for p in Path(source).rglob("*")
             if re.match(self.project.manifests, p.name)
         ]
-        noun = self.engine.plural("manifest", len(manifests))
+        noun = self.engine.plural("manifest", len(manifests))  # type: ignore
         self.console.print(f"Copying {len(manifests)} {noun} to {target}")
 
         for manifest in manifests:
