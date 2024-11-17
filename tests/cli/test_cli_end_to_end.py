@@ -4,10 +4,9 @@ from pathlib import Path
 import pytest
 from pytest import fixture
 
-from ptah.cli import build, project, deploy, nuke
+from ptah.cli import build, deploy, nuke, project
 from ptah.clients import get
 from ptah.models import OperatingSystem
-
 
 # TODO: systematic way of skipping the slow tests by default.
 
@@ -39,6 +38,7 @@ def test_deploy(test_project_cwd):
 
 def test_nuke(test_project_cwd):
     nuke()
+
 
 # TODO: https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/#install-with-homebrew-on-macos
 
