@@ -8,8 +8,9 @@ from ptah.models.kind import KindCluster
 from ptah.models.project import ApiServer, Project
 
 
+@patch(f"{Dashboard.__module__}.pyperclip.copy")
 @patch(f"{Dashboard.__module__}.webbrowser.open")
-def test_open(mock_open):
+def test_open(mock_open, mock_copy):
     project = Project(KindCluster("name"))
     shell = MagicMock()
     dashboard = Dashboard(Console(), project, shell=shell)
