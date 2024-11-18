@@ -8,10 +8,9 @@ from inflect import engine
 from injector import inject
 from rich.console import Console
 
-from ptah.clients.shell import Shell
 from ptah.clients.filesystem import Filesystem
+from ptah.clients.shell import Shell
 from ptah.models import Project
-
 
 
 @dataclass
@@ -33,7 +32,9 @@ class ImageDefinition:
         else:
             ignore = None
 
-        return dirhash(str(self.location.parent.absolute()), self.algorithm, ignore=ignore)[:7]
+        return dirhash(
+            str(self.location.parent.absolute()), self.algorithm, ignore=ignore
+        )[:7]
 
     @property
     def uri(self):

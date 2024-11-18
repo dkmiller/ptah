@@ -40,6 +40,10 @@ ptah = "ptah.cli:app"
 known_local_folder = ["ptah"]
 profile = "black"
 
+# https://microsoft.github.io/pyright/#/configuration
+[tool.pyright]
+exclude=["examples"]
+
 [tool.pytest.ini_options]
 addopts = "--cov=ptah --junitxml=coverage.xml"
 

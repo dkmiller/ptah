@@ -6,9 +6,9 @@ from inflect import engine
 from injector import inject
 from rich.console import Console
 
+from ptah.clients.docker import Docker
 from ptah.clients.filesystem import Filesystem
 from ptah.clients.shell import Shell
-from ptah.clients.docker import Docker
 from ptah.models import Project
 
 

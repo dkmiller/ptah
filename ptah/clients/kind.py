@@ -40,7 +40,7 @@ class Kind:
 
         self.shell.run(args)
 
-    @cache_ignore_inputs
+    # @cache_ignore_inputs
     def clusters(self) -> list[str]:
         return self.shell("kind", "get", "clusters").splitlines()
 
