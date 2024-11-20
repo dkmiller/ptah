@@ -24,7 +24,6 @@ class Docker:
     shell: Shell
 
     def image_tag(self, location: Path) -> str:
-
         dockerignore = location.parent / ".dockerignore"
 
         if dockerignore.exists():
