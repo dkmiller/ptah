@@ -47,3 +47,4 @@ def test_project_path_in_subdirectory(depth, tmp_path):
     location.mkdir(parents=True)
 
     assert filesystem.project_path(location) == project_path
+    assert filesystem.project_path(location).is_absolute()

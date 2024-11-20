@@ -39,8 +39,7 @@ class Kubernetes:
             content = manifest.read_text()
 
             for image in self.docker.image_definitions():
-                # TODO: regex for "non-word" at the end.
-                content = content.replace(f"ptah://{image.name}", image.uri)
+                content = re.sub(rf"ptah://{image.name}(?!\w)", image.uri, content)
 
             relative = str(manifest.relative_to(source))
             target_path = Path(target) / relative

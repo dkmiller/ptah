@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: fastapi-deployment
   labels:
-    app: httpbin
+    app: fastapi
 spec:
   replicas: 1
   selector:

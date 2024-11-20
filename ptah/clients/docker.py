@@ -10,35 +10,7 @@ from rich.console import Console
 
 from ptah.clients.filesystem import Filesystem
 from ptah.clients.shell import Shell
-from ptah.models import Project
-
-
-@dataclass
-class ImageDefinition:
-    """
-    Local definition of Docker image.
-    """
-
-    location: Path
-    name: str
-    algorithm: str = "md5"
-
-    @property
-    def tag(self):
-        dockerignore = self.location.parent / ".dockerignore"
-
-        if dockerignore.exists():
-            ignore = dockerignore.read_text().splitlines()
-        else:
-            ignore = None
-
-        return dirhash(
-            str(self.location.parent.absolute()), self.algorithm, ignore=ignore
-        )[:7]
-
-    @property
-    def uri(self):
-        return f"{self.name}:{self.tag}"
+from ptah.models import DockerImage, Project
 
 
 @inject
@@ -51,6 +23,19 @@ class Docker:
     project: Project
     shell: Shell
 
+    def image_tag(self, location: Path) -> str:
+
+        dockerignore = location.parent / ".dockerignore"
+
+        if dockerignore.exists():
+            ignore = dockerignore.read_text().splitlines()
+        else:
+            ignore = None
+
+        return dirhash(
+            str(location.parent.absolute()), self.project.tag_algorithm, ignore=ignore
+        )[:7]
+
     def image_name(self, path: Path, match: re.Match) -> str:
         if rv := match.groupdict().get("name"):
             return rv
@@ -61,13 +46,14 @@ class Docker:
         else:
             return path.stem
 
-    def image_definitions(self) -> list[ImageDefinition]:
+    def image_definitions(self) -> list[DockerImage]:
         root = self.filesystem.project_root()
         rv = []
         for path in root.rglob("*"):
             if m := re.match(self.project.dockerfiles, str(path.relative_to(root))):
                 image_name = self.image_name(path, m)
-                rv.append(ImageDefinition(path, image_name))
+                tag = self.image_tag(path)
+                rv.append(DockerImage(path, image_name, tag))
 
         return rv
 
@@ -110,8 +96,6 @@ class Docker:
         self.console.print(msg)
 
         if push:
-            # TODO: handle pushing to a remote registry.
-            # https://codeberg.org/hjacobs/pytest-kind/src/branch/main/pytest_kind/cluster.py
             # Sadly, Kind doesn't support incremental loads:
             # https://github.com/kubernetes-sigs/kind/issues/380
             args = ["kind", "load", "docker-image"] + uris

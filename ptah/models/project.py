@@ -26,7 +26,8 @@ class Project:
 
     dockerfiles: str = r"(?i)(?P<name>\w+)/[\w\.]*Dockerfile"
     """
-    TODO
+    Regular expression used to identify Dockerfiles. If containing a group named `name`, that will
+    be used to determine image names.
     """
 
     manifests: str = r"^(?!helmfile).*\.yaml"
@@ -38,4 +39,9 @@ class Project:
     """
     Relative (to project root) or absolute path for where the built manifests should go (this is
     where kubectl apply will be called).
+    """
+
+    tag_algorithm: str = "md5"
+    """
+    Dirhash algorithm used to determine Docker image tags.
     """
