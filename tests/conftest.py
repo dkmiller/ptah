@@ -12,6 +12,12 @@ def port() -> int:
 
 
 @fixture
+def project_cwd(tmp_cwd) -> Generator[Path, None, None]:
+    (tmp_cwd / "ptah.yml").write_text("kind: {name: foo}")
+    yield tmp_cwd
+
+
+@fixture
 def tmp_cwd(tmp_path: Path) -> Generator[Path, None, None]:
     tmp_path.mkdir(parents=True, exist_ok=True)
     cwd = Path.cwd()
