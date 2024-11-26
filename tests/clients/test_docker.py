@@ -49,7 +49,7 @@ def test_image_definitions(project_cwd):
     (bar / "barname.Dockerfile").touch()
 
     docker = get(Docker)
-    assert docker.image_definitions() == [
+    assert sorted(docker.image_definitions(), key=lambda d: d.tag) == [
         DockerImage(foo / "Dockerfile", "foo", "8d36a53"),
         DockerImage(bar / "barname.Dockerfile", "bar", "977e528"),
     ]
