@@ -1,3 +1,4 @@
+import os
 from dataclasses import dataclass, field
 
 from ptah.models.kind import KindCluster
@@ -14,6 +15,14 @@ class Ui:
     user: str = "dashboard-admin"
 
 
+def dockerfiles_regex() -> str:
+    if os.sep == "\\":
+        sep_regex = r"\\"
+    else:
+        sep_regex = os.sep
+    return rf"(?i)(?P<name>\w+){sep_regex}[\w\.]*Dockerfile"
+
+
 @dataclass
 class Project:
     """
@@ -24,7 +33,7 @@ class Project:
     api_server: ApiServer = field(default_factory=ApiServer)
     ui: Ui = field(default_factory=Ui)
 
-    dockerfiles: str = r"(?i)(?P<name>\w+)/[\w\.]*Dockerfile"
+    dockerfiles: str = field(default_factory=dockerfiles_regex)
     """
     Regular expression used to identify Dockerfiles. If containing a group named `name`, that will
     be used to determine image names.
