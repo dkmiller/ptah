@@ -1,13 +1,14 @@
 [project]
 name = "ptah-cli"
 readme = "README.md"
-version = "0.2.0"
+version = "0.3.0"
 authors = [
     { name = "Dan Miller", email = "daniel.keegan.miller@gmail.com" }
 ]
 requires-python = ">=3.11,<3.14"
 dependencies = [
     "cachelib>=0.13.0",
+    "dirhash>=0.5.0",
     "inflect>=7.4.0",
     "injector>=0.21.0",
     "jsonpath-ng>=1.7.0",
@@ -38,6 +39,10 @@ ptah = "ptah.cli:app"
 [tool.isort]
 known_local_folder = ["ptah"]
 profile = "black"
+
+# https://microsoft.github.io/pyright/#/configuration
+[tool.pyright]
+exclude=["examples"]
 
 [tool.pytest.ini_options]
 addopts = "--cov=ptah --junitxml=coverage.xml"

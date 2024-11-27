@@ -41,7 +41,7 @@ class Filesystem:
         for candidate in [location] + list(location.parents):
             rv = candidate / PROJECT_FILE
             if rv.is_file():
-                return rv
+                return rv.absolute()
         self.panic(f"No file {PROJECT_FILE} in current location or parent(s)")
 
     def project_root(self, location: Optional[Path] = None) -> Path:

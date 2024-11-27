@@ -6,6 +6,7 @@ from typer.main import get_command
 
 from ptah.clients import (
     Dashboard,
+    Docker,
     Filesystem,
     Forward,
     Helmfile,
@@ -49,6 +50,9 @@ def build():
     """
     Copy all Kubernetes manifests from the current project into the `build_output` directory.
     """
+    docker = get(Docker)
+    docker.build()
+
     k8s = get(Kubernetes)
     k8s.build()
 
@@ -69,6 +73,8 @@ def deploy():
     helm.sync()
     helm.apply()
 
+    docker = get(Docker)
+    docker.push()
     get(Kubernetes).apply()
 
     forward(kill=True)

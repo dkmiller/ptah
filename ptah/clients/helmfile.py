@@ -43,19 +43,19 @@ class Helmfile:
         if not self.is_installed():
             self.install()
 
-    def helmfile_exists(self, target: Path) -> bool:
-        helmfile = target / "helmfile.yaml"
-        return helmfile.is_file()
+    def path(self) -> Path:
+        return self.filesystem.project_root() / "helmfile.yaml"
 
-    def sync(self, target: Path | None = None) -> None:
-        target = target or self.filesystem.project_root()
-        if self.helmfile_exists(target):
+    def helmfile_exists(self) -> bool:
+        return self.path().is_file()
+
+    def sync(self) -> None:
+        if self.helmfile_exists():
             self.ensure_installed()
             self.console.print("Syncing Helmfile")
-            self.shell("helmfile", "sync")
+            self.shell("helmfile", "sync", "--file", str(self.path()))
 
-    def apply(self, target: Path | None = None) -> None:
-        target = target or self.filesystem.project_root()
-        if self.helmfile_exists(target):
+    def apply(self) -> None:
+        if self.helmfile_exists():
             self.console.print("Applying Helmfile")
-            self.shell("helmfile", "apply")
+            self.shell("helmfile", "apply", "--file", str(self.path()))

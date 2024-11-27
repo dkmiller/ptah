@@ -3,7 +3,6 @@ from dataclasses import dataclass
 
 from injector import inject
 
-from ptah.clients.caching import cache_ignore_inputs
 from ptah.clients.shell import Shell
 from ptah.models import OperatingSystem, Project
 
@@ -40,7 +39,6 @@ class Kind:
 
         self.shell.run(args)
 
-    @cache_ignore_inputs
     def clusters(self) -> list[str]:
         return self.shell("kind", "get", "clusters").splitlines()
 
