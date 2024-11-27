@@ -1,5 +1,6 @@
 import re
 from pathlib import Path
+from unittest.mock import MagicMock
 from uuid import uuid4
 
 import pytest
@@ -53,3 +54,53 @@ def test_image_definitions(project_cwd):
         DockerImage(foo / "Dockerfile", "foo", "8d36a53"),
         DockerImage(bar / "barname.Dockerfile", "bar", "977e528"),
     ]
+
+
+def test_build(capsys, project_cwd):
+    foo = project_cwd / "foo"
+    foo.mkdir(parents=True, exist_ok=True)
+    (foo / "foo.txt").write_text("foo contents")
+    (foo / "Dockerfile").touch()
+
+    docker = get(Docker)
+
+    docker.shell = MagicMock()
+
+    docker.build()
+
+    bar = project_cwd / "bar"
+    bar.mkdir(parents=True, exist_ok=True)
+    (bar / "bar.txt").write_text("bar contents")
+    (bar / "barname.Dockerfile").touch()
+
+    docker.build()
+
+    lines = capsys.readouterr().out.splitlines()
+
+    assert "Building 1 Docker image" in lines
+    assert "Building 1 Docker image (1 already built)" in lines
+
+
+def test_push(capsys, project_cwd):
+    foo = project_cwd / "foo"
+    foo.mkdir(parents=True, exist_ok=True)
+    (foo / "foo.txt").write_text("foo contents")
+    (foo / "Dockerfile").touch()
+
+    docker = get(Docker)
+
+    docker.shell = MagicMock()
+
+    docker.push()
+
+    bar = project_cwd / "bar"
+    bar.mkdir(parents=True, exist_ok=True)
+    (bar / "bar.txt").write_text("bar contents")
+    (bar / "barname.Dockerfile").touch()
+
+    docker.push()
+
+    lines = capsys.readouterr().out.splitlines()
+
+    assert "Pushing 1 image" in lines
+    assert "Pushing 1 image (1 already pushed)" in lines
