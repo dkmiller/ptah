@@ -23,14 +23,14 @@ dev = [
     "build==1.2.2.post1",
     "isort==5.13.2",
     "pyright==1.1.389",
-    "pytest==8.3.3",
+    "pytest==8.3.4",
     "pytest-cov==6.0.0",
-    "ruff==0.7.2",
+    "ruff==0.8.1",
 ]
 doc = [
     "mkdocs==1.6.1",
     "mkdocs-click==0.8.1",
-    "mkdocs-material==9.5.43",
+    "mkdocs-material==9.5.47",
 ]
 
 [project.scripts]
