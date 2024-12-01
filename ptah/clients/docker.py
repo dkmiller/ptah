@@ -9,6 +9,7 @@ from injector import inject
 from rich.console import Console
 
 from ptah.clients.filesystem import Filesystem
+from ptah.clients.kind import Kind
 from ptah.clients.shell import Shell
 from ptah.models import DockerImage, Project
 
@@ -20,6 +21,7 @@ class Docker:
     console: Console
     engine: engine
     filesystem: Filesystem
+    kind: Kind
     project: Project
     shell: Shell
 
@@ -98,7 +100,7 @@ class Docker:
             # Sadly, Kind doesn't support incremental loads:
             # https://github.com/kubernetes-sigs/kind/issues/380
             args = ["kind", "load", "docker-image"] + uris
-            args += ["--name", self.project.kind.name]
+            args += ["--name", self.kind.cluster_name()]
             self.shell.run(args)
             for uri in uris:
                 self.cache.set(f"push__{uri}", "any")
