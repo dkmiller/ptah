@@ -1,0 +1,10 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: db
+
+nodes:
+- role: control-plane
+  extraMounts:
+  # TODO: replace this with a path that works on your machine.
+  - hostPath: /Users/dan/src/ptah/examples/db
+    containerPath: /mnt/db
