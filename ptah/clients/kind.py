@@ -52,9 +52,9 @@ class Kind:
                 args = ["brew", "install", "kind"]
             case OperatingSystem.WINDOWS:
                 args = ["winget", "install", "Kubernetes.kind"]
-            case OperatingSystem.LINUX:
-                # TODO: https://medium.com/@binitabharati/setting-up-kind-cluster-9393aacbef43
-                args = []
+            # TODO: https://medium.com/@binitabharati/setting-up-kind-cluster-9393aacbef43
+            case default:
+                raise RuntimeError(f"Unsupported operating system {default}")
 
         self.shell.run(args)
 
