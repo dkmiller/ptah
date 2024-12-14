@@ -68,7 +68,9 @@ class Kind:
             if self.project.kind.name:
                 args += ["--name", self.project.kind.name]
             if self.project.kind.config:
-                args += [f"--config={self.filesystem.project_root() / self.project.kind.config}"]
+                args += [
+                    f"--config={self.filesystem.project_root() / self.project.kind.config}"
+                ]
             args += ["--wait", "2m"]
             self.shell(*args)
 

@@ -1,14 +1,21 @@
 # 𓁱 Ptah
 
-Kubernetes development toolkit, with a focus on rapid iteration and local
-hosting.
+Kubernetes development toolkit, with a focus on rapid iteration and local hosting. Ptah streamlines
+the many commands you need to get up and running:
 
-Helps streamline the N "random" commands you need to get up and running, so you can focus on
-figuring out how to make X work inside a Kubernetes environment.
+- Installing Docker, Kind, Helm, etc.
+- Initializing a local Kubernetes cluster
+- Building N Docker images and transferring them to the cluster
+- Port-forwarding all your deployments
+- (... and more)
 
-Named after the [Egyptian god of creation](https://en.wikipedia.org/wiki/Ptah)
+so you can focus on figuring out how to do whatever it is you're trying to achieve in a
+Kubernetes environment.
 
-Not sure: [first project](./tutorials/first-project.md).
+**If you're not sure where to start, check out the
+[First Ptah project](./tutorials/first-project.md) tutorial.**
+
+Ptah is named after the [Egyptian god of creation](https://en.wikipedia.org/wiki/Ptah).
 
 <!--
 Reference for the Unicode heiroglyph.

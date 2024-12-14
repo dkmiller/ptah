@@ -10,10 +10,11 @@ class Hero(SQLModel, table=True):
     age: int | None = Field(default=None, index=True)
 
 
-
 connect_args = {"check_same_thread": False}
 # https://stackoverflow.com/a/10770526
-engine = create_engine("mysql://root:password@mysql-service:3306", connect_args=connect_args)
+engine = create_engine(
+    "mysql://root:password@mysql-service:3306", connect_args=connect_args
+)
 
 
 def create_db_and_tables():
