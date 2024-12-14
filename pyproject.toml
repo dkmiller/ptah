@@ -9,6 +9,7 @@ requires-python = ">=3.11,<3.14"
 dependencies = [
     "cachelib>=0.13.0",
     "dirhash>=0.5.0",
+    "httpx>=0.28.1",
     "inflect>=7.4.0",
     "injector>=0.21.0",
     "jsonpath-ng>=1.7.0",
