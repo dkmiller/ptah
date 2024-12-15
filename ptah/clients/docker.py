@@ -29,7 +29,11 @@ class Docker:
 
     def copy_statements(self, image: DockerImage) -> list[DockerCopyStatement]:
         self.parser.content = image.location.read_text()
-        copy_statements = [statement["value"] for statement in self.parser.structure if statement["instruction"] == "COPY"]
+        copy_statements = [
+            statement["value"]
+            for statement in self.parser.structure
+            if statement["instruction"] == "COPY"
+        ]
         rv = []
         for statement in copy_statements:
             # TODO: https://docs.docker.com/reference/dockerfile/#copy compliant parsing.

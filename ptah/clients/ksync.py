@@ -14,6 +14,7 @@ class Ksync:
     """
     https://ksync.github.io/ksync/
     """
+
     os: OperatingSystem
     shell: Shell
 
