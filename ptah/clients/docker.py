@@ -4,6 +4,7 @@ from pathlib import Path
 
 from cachelib import BaseCache
 from dirhash import dirhash
+from dockerfile_parse import DockerfileParser
 from inflect import engine
 from injector import inject
 from rich.console import Console
@@ -11,7 +12,7 @@ from rich.console import Console
 from ptah.clients.filesystem import Filesystem
 from ptah.clients.kind import Kind
 from ptah.clients.shell import Shell
-from ptah.models import DockerImage, Project
+from ptah.models import DockerCopyStatement, DockerImage, Project
 
 
 @inject
@@ -22,8 +23,20 @@ class Docker:
     engine: engine
     filesystem: Filesystem
     kind: Kind
+    parser: DockerfileParser
     project: Project
     shell: Shell
+
+    def copy_statements(self, image: DockerImage) -> list[DockerCopyStatement]:
+        self.parser.content = image.location.read_text()
+        copy_statements = [statement["value"] for statement in self.parser.structure if statement["instruction"] == "COPY"]
+        rv = []
+        for statement in copy_statements:
+            # TODO: https://docs.docker.com/reference/dockerfile/#copy compliant parsing.
+            source, target = statement.split(" ")
+            if (image.location.parent / source).is_dir():
+                rv.append(DockerCopyStatement(source, target))
+        return rv
 
     def image_tag(self, location: Path) -> str:
         dockerignore = location.parent / ".dockerignore"

@@ -118,7 +118,7 @@ def nuke():
 
 @app.command()
 def sync():
-    from ptah.clients.sync import Sync
+    from ptah.operations.sync import Sync
 
     get(Sync).run()
 

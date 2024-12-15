@@ -3,6 +3,12 @@ from pathlib import Path
 
 
 @dataclass
+class DockerCopyStatement:
+    source: str
+    target: str
+
+
+@dataclass
 class DockerImage:
     """
     Local definition of Docker image.
