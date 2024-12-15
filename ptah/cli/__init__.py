@@ -19,7 +19,7 @@ from ptah.clients import (
 )
 from ptah.models import Serialization
 
-app = typer.Typer()
+app = typer.Typer(pretty_exceptions_enable=False)
 
 
 @app.command()
@@ -114,6 +114,13 @@ def nuke():
 
     filesystem = get(Filesystem)
     filesystem.delete(filesystem.cache_location())
+
+
+@app.command()
+def sync():
+    from ptah.clients.sync import Sync
+
+    get(Sync).run()
 
 
 # Create a "nicely named" Click command object for generated docs.

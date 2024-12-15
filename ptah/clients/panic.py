@@ -9,7 +9,7 @@ class PtahPanic(SystemExit):
 
 
 @inject
-@dataclass
+@dataclass(frozen=True)
 class Panic:
     console: Console
 
