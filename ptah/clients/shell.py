@@ -1,11 +1,14 @@
 import subprocess
-import sys
 from dataclasses import dataclass
 from typing import List
 
 from injector import inject
 from rich.console import Console
 from rich.syntax import Syntax
+
+
+class PtahShellError(SystemExit):
+    pass
 
 
 @inject
@@ -44,6 +47,6 @@ class Shell:
                     f"[red]💥 The command below exited with status {result.returncode}:[/red]"
                 )
                 self.console.print(syntax)
-                sys.exit(result.returncode)
+                raise PtahShellError(result.returncode)
 
         return result.stdout.decode(errors="replace").strip()

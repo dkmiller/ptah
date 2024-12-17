@@ -20,4 +20,5 @@ class DockerImage:
 
     @property
     def uri(self):
+        # TODO: ptah.local/{project}/{name}:tag
         return f"{self.name}:{self.tag}"
