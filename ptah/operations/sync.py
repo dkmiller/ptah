@@ -12,7 +12,7 @@ from watchdog import events
 from watchdog.events import FileModifiedEvent, FileSystemEventHandler
 from watchdog.observers import Observer
 
-from ptah.clients import Docker, Kubernetes, PtahShellError, Shell
+from ptah.clients import Docker, Kubernetes, PtahPanic, Shell
 from ptah.models import DockerImage
 
 
@@ -88,7 +88,7 @@ class _Handler(FileSystemEventHandler):
         """
         try:
             self.shell(*args)
-        except PtahShellError:
+        except PtahPanic:
             pass
 
     def exec(self, *args):
