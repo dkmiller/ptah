@@ -9,6 +9,7 @@ import pytest
 from ptah.clients import get
 from ptah.operations import Sync
 
+
 @pytest.fixture
 def sync():
     path = Path(__file__).parent / "pods.json"
