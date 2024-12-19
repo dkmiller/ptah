@@ -21,6 +21,7 @@ class _Handler(FileSystemEventHandler):
     """
     https://github.com/katjuncker/node-kubycat/blob/main/src/Kubycat.ts
     """
+
     def __init__(
         self,
         source: str,
