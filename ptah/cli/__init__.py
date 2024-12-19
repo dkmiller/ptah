@@ -1,4 +1,5 @@
 import json
+import time
 from dataclasses import asdict
 
 import typer
@@ -19,7 +20,7 @@ from ptah.clients import (
 )
 from ptah.models import Serialization
 
-app = typer.Typer()
+app = typer.Typer(pretty_exceptions_enable=False)
 
 
 @app.command()
@@ -114,6 +115,15 @@ def nuke():
 
     filesystem = get(Filesystem)
     filesystem.delete(filesystem.cache_location())
+
+
+@app.command()
+def sync():
+    from ptah.operations.sync import Sync
+
+    with get(Sync).run():
+        while True:
+            time.sleep(1)
 
 
 # Create a "nicely named" Click command object for generated docs.

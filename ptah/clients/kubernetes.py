@@ -1,3 +1,4 @@
+import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -77,3 +78,6 @@ class Kubernetes:
 
         for w in watch:
             self.shell.run(w)
+
+    def pods(self) -> dict:
+        return json.loads(self.shell("kubectl", "get", "pods", "-o", "json"))

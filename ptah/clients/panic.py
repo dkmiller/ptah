@@ -13,6 +13,6 @@ class PtahPanic(SystemExit):
 class Panic:
     console: Console
 
-    def __call__(self, message: str):
+    def __call__(self, message: str, return_code: int = 1):
         self.console.print(f"[bold red]{message}[/bold red]")
-        raise PtahPanic(1)
+        raise PtahPanic(return_code)
