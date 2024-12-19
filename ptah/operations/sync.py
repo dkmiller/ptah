@@ -1,4 +1,3 @@
-import json
 import os
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -13,31 +12,35 @@ from watchdog import events
 from watchdog.events import FileModifiedEvent, FileSystemEventHandler
 from watchdog.observers import Observer
 
-from ptah.clients.docker import Docker, DockerImage
-from ptah.clients.shell import PtahShellError, Shell
+from ptah.clients import Docker, Kubernetes, PtahShellError, Shell
+from ptah.models import DockerImage
 
 
+@dataclass
 class _Handler(FileSystemEventHandler):
     """
-    https://github.com/katjuncker/node-kubycat/blob/main/src/Kubycat.ts
+    Propagate file system changes from
+
+    > `(Docker image root) / (source) ↦ (pod : container) / (target)`
+
+    Imitates: https://github.com/katjuncker/node-kubycat/blob/main/src/Kubycat.ts
     """
 
-    def __init__(
-        self,
-        source: str,
-        pod: str,
-        container: str,
-        image: DockerImage,
-        target: str,
-        shell: Shell,
-    ):
-        print(f"Syncing {source} ↦ {pod}/{container}:{target}")
-        self.source = source
-        self.pod = pod
-        self.container = container
-        self.image = image
-        self.target = target
-        self.shell = shell
+    source: str
+    pod: str
+    container: str
+    image: DockerImage
+    target: str
+    shell: Shell
+
+    # https://stackoverflow.com/a/52390734
+    def __hash__(self):
+        return (
+            hash(self.source)
+            + hash(self.pod)
+            + hash(self.container)
+            + hash(self.target)
+        )
 
     @lru_cache
     def dockerignore_spec(self, image_root: Path) -> Optional[PathSpec]:
@@ -56,13 +59,9 @@ class _Handler(FileSystemEventHandler):
             return True
         return False
 
-    # TODO (https://github.com/katjuncker/node-kubycat/blob/main/src/Kubycat.ts):
-    # - on_deleted (kubectl exec /bin/bash -c "rm -rf ...")
-    # - on_moved
-
     def relevant_target(self, pathish: bytes | str) -> Optional[str]:
         if not isinstance(pathish, str):
-            # TODO: warning.
+            print(f"⚠️ Ignoring non-string path {pathish}")
             return
         path = Path(pathish)
         if self.is_relevant(path):
@@ -144,17 +143,14 @@ class Sync:
     """
 
     docker: Docker
+    kubernetes: Kubernetes
     shell: Shell
-
-    def pods(self) -> dict:
-        # TODO: move this to Kubernetes class.
-        return json.loads(self.shell("kubectl", "get", "pods", "-o", "json"))
 
     @contextmanager
     def run(self):
         images = self.docker.image_definitions()
         observer = Observer()
-        for pod in self.pods()["items"]:
+        for pod in self.kubernetes.pods()["items"]:
             pod_name = pod["metadata"]["name"]
             for container in pod["spec"]["containers"]:
                 container_name = container["name"]
@@ -170,7 +166,9 @@ class Sync:
                                 target=copy_statement.target,
                                 shell=self.shell,
                             )
-
+                            print(
+                                f"Syncing {copy_statement.source} ↦ {pod_name}/{container_name}:{copy_statement.target}"
+                            )
                             observer.schedule(
                                 event_handler,
                                 str(image.location.parent),

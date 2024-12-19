@@ -1,3 +1,4 @@
+import json
 import shutil
 import time
 from pathlib import Path
@@ -8,24 +9,22 @@ import pytest
 from ptah.clients import get
 from ptah.operations import Sync
 
+PODS_PATH = Path(__file__).parent / "pods.json"
+PODS = json.loads(PODS_PATH.read_text())
+
 
 @pytest.mark.parametrize("in_project", ["project-with-fastapi"], indirect=True)
 def test_sync_respects_file_creation(in_project):
-    pods = Path(__file__).parent / "pods.json"
-
     sync = get(Sync)
+    sync.kubernetes.pods = MagicMock()
     sync.shell = MagicMock()
-    sync.shell.return_value = pods.read_text()
+    sync.kubernetes.pods.return_value = PODS
 
     with sync.run():
         Path("fastapi/foo.txt").touch()
         time.sleep(0.1)
 
-    assert len(sync.shell.call_args_list) == 2
-
-    args = sync.shell.call_args_list[1][0]
-
-    assert args == (
+    sync.shell.assert_called_once_with(
         "kubectl",
         "cp",
         str(Path.cwd().absolute() / "fastapi/foo.txt"),
@@ -37,11 +36,10 @@ def test_sync_respects_file_creation(in_project):
 
 @pytest.mark.parametrize("in_project", ["project-with-fastapi"], indirect=True)
 def test_sync_respects_file_deletion(in_project):
-    pods = Path(__file__).parent / "pods.json"
-
     sync = get(Sync)
+    sync.kubernetes.pods = MagicMock()
     sync.shell = MagicMock()
-    sync.shell.return_value = pods.read_text()
+    sync.kubernetes.pods.return_value = PODS
 
     with sync.run():
         Path("fastapi/main.py").unlink()
@@ -64,20 +62,16 @@ def test_sync_respects_file_deletion(in_project):
 
 @pytest.mark.parametrize("in_project", ["project-with-fastapi"], indirect=True)
 def test_sync_respects_directory_creation(in_project):
-    pods = Path(__file__).parent / "pods.json"
-
     sync = get(Sync)
+    sync.kubernetes.pods = MagicMock()
     sync.shell = MagicMock()
-    sync.shell.return_value = pods.read_text()
+    sync.kubernetes.pods.return_value = PODS
 
     with sync.run():
         Path("fastapi/baz").mkdir()
         time.sleep(0.1)
 
-    assert len(sync.shell.call_args_list) == 2
-    args = sync.shell.call_args_list[1][0]
-
-    assert args == (
+    sync.shell.assert_called_once_with(
         "kubectl",
         "exec",
         "fastapi-deployment-79f65c9947-zg2p6",
@@ -92,27 +86,24 @@ def test_sync_respects_directory_creation(in_project):
 
 @pytest.mark.parametrize("in_project", ["project-with-fastapi"], indirect=True)
 def test_sync_respects_dockerignore(in_project):
-    pods = Path(__file__).parent / "pods.json"
-
     sync = get(Sync)
+    sync.kubernetes.pods = MagicMock()
     sync.shell = MagicMock()
-    sync.shell.return_value = pods.read_text()
+    sync.kubernetes.pods.return_value = PODS
 
     with sync.run():
         Path("fastapi/ignore").touch()
         time.sleep(0.1)
 
-    # Just kubectl get pods ...
-    assert len(sync.shell.call_args_list) == 1
+    sync.shell.assert_not_called()
 
 
 @pytest.mark.parametrize("in_project", ["project-with-fastapi"], indirect=True)
 def test_sync_respects_file_modification(in_project):
-    pods = Path(__file__).parent / "pods.json"
-
     sync = get(Sync)
+    sync.kubernetes.pods = MagicMock()
     sync.shell = MagicMock()
-    sync.shell.return_value = pods.read_text()
+    sync.kubernetes.pods.return_value = PODS
 
     with sync.run():
         assert Path("fastapi/main.py").is_file()
@@ -133,11 +124,10 @@ def test_sync_respects_file_modification(in_project):
 
 @pytest.mark.parametrize("in_project", ["project-with-fastapi"], indirect=True)
 def test_sync_respects_file_movement(in_project):
-    pods = Path(__file__).parent / "pods.json"
-
     sync = get(Sync)
+    sync.kubernetes.pods = MagicMock()
     sync.shell = MagicMock()
-    sync.shell.return_value = pods.read_text()
+    sync.kubernetes.pods.return_value = PODS
 
     with sync.run():
         shutil.move("fastapi/main.py", "fastapi/main2.py")
