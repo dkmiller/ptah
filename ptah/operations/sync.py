@@ -53,7 +53,7 @@ class _Handler(FileSystemEventHandler):
 
     def is_relevant(self, path: Path) -> bool:
         root = self.image.location.parent
-        if path.is_relative_to(root):
+        if path.is_relative_to(root) and path != root:
             if spec := self.dockerignore_spec(root):
                 return not spec.match_file(path.relative_to(root))
             return True
