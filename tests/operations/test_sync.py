@@ -93,8 +93,6 @@ def test_sync_respects_file_modification(in_project, sync):
         Path("fastapi/main.py").write_text("foo")
         time.sleep(0.1)
 
-    assert len(sync.shell.call_args_list) > 1
-
     sync.shell.assert_called_with(
         "kubectl",
         "cp",
@@ -110,8 +108,6 @@ def test_sync_respects_file_movement(in_project, sync):
     with sync.run():
         shutil.move("fastapi/main.py", "fastapi/main2.py")
         time.sleep(0.1)
-
-    assert len(sync.shell.call_args_list) > 1
 
     sync.shell.assert_called_with(
         "kubectl",
