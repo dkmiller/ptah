@@ -23,15 +23,14 @@ class Docker:
     engine: engine
     filesystem: Filesystem
     kind: Kind
-    parser: DockerfileParser
     project: Project
     shell: Shell
 
     def copy_statements(self, image: DockerImage) -> list[DockerCopyStatement]:
-        self.parser.content = image.location.read_text()
+        parser = DockerfileParser(path=str(image.location))
         copy_statements = [
             statement["value"]
-            for statement in self.parser.structure
+            for statement in parser.structure
             if statement["instruction"] == "COPY"
         ]
         rv = []

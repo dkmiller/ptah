@@ -1,4 +1,5 @@
 import json
+import time
 from dataclasses import asdict
 
 import typer
@@ -120,7 +121,9 @@ def nuke():
 def sync():
     from ptah.operations.sync import Sync
 
-    get(Sync).run()
+    with get(Sync).run():
+        while True:
+            time.sleep(1)
 
 
 # Create a "nicely named" Click command object for generated docs.
