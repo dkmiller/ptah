@@ -136,6 +136,22 @@ ptah forward
 to open the Kubernetes UI in our browser with an auth token copied to the clipboard. Now, we can
 use the UI to browse logs from our application, pod state, etc.!
 
+It's a bit slow to rebuild Docker images and redeploy Kubernetes pods every time we want to make
+a small change to our application, especially when many frameworks like FastAPI support hot reload.
+
+Let's run the command below.
+
+``` bash
+ptah sync
+```
+
+Now, any changes you make to your local app definition will be immediately copied over to the
+running Docker container.
+
+!!! note "Copy statements must be directories with absolute targets"
+    Hot reload only works for `COPY` statements in your Dockerfiles with directory sources and
+    absolute targets, e.g. `COPY . /src/`.
+
 ## Cleaning up
 
 Finally, run `ptah nuke` to clean up your Kind cluster and port-forwarding background processes.

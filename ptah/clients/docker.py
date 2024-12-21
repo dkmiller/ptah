@@ -36,9 +36,13 @@ class Docker:
         rv = []
         for statement in copy_statements:
             # TODO: https://docs.docker.com/reference/dockerfile/#copy compliant parsing.
-            source, target = statement.split(" ")
-            if (image.location.parent / source).is_dir():
-                rv.append(DockerCopyStatement(source, target))
+            if m := re.match(
+                r"(?P<source>[\w|\.|/]+)\s+(?P<target>/[\w|\.|/]+)", statement
+            ):
+                source = m.group("source")
+                target = m.group("target")
+                if (image.location.parent / source).is_dir():
+                    rv.append(DockerCopyStatement(source, target))
         return rv
 
     def image_tag(self, location: Path) -> str:

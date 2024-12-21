@@ -19,6 +19,7 @@ from ptah.clients import (
     get,
 )
 from ptah.models import Serialization
+from ptah.operations import Sync
 
 app = typer.Typer(pretty_exceptions_enable=False)
 
@@ -46,8 +47,8 @@ def version():
     print(get(Version).version())
 
 
-@app.command()
-def build():
+@app.command(name="build")
+def _build():
     """
     Copy all Kubernetes manifests from the current project into the `build_output` directory.
     """
@@ -59,12 +60,13 @@ def build():
 
 
 @app.command()
-def deploy():
+def deploy(build: bool = True, forward: bool = True, sync: bool = False):
     """
     Build the project, ensure the Kind CLI and cluster exit, sync and apply Helm charts, apply
-    Kubernetes manifests, and set up port-forwarding from the cluster to loclhost.
+    Kubernetes manifests, and set up port-forwarding from the cluster to localhost.
     """
-    build()
+    if build:
+        _build()
 
     kind = get(Kind)
     kind.ensure_installed()
@@ -78,12 +80,16 @@ def deploy():
     docker.push()
     get(Kubernetes).apply()
 
-    forward(kill=True)
-    forward(kill=False)
+    if forward:
+        _forward(kill=True)
+        _forward(kill=False)
+
+    if sync:
+        _sync()
 
 
-@app.command()
-def forward(kill: bool = False):
+@app.command(name="forward")
+def _forward(kill: bool = False):
     """
     Forward the Kubernetes API server and all deployment ports to localhost; alternatively kill
     all active "port forward" sessions.
@@ -108,7 +114,7 @@ def nuke():
     """
     Forcibly delete the Kind cluster and all related resources.
     """
-    forward(kill=True)
+    _forward(kill=True)
 
     kind = get(Kind)
     kind.delete()
@@ -117,10 +123,16 @@ def nuke():
     filesystem.delete(filesystem.cache_location())
 
 
-@app.command()
-def sync():
-    from ptah.operations.sync import Sync
+@app.command(name="sync")
+def _sync():
+    """
+    Find all Ptah-managed Docker images containing copy statements like
 
+    > COPY source /target
+
+    and synchronize the contents of the source directory with the target directory in all running
+    pods using that image.
+    """
     with get(Sync).run():
         while True:
             time.sleep(1)

@@ -133,7 +133,9 @@ class _Handler(FileSystemEventHandler):
 @dataclass
 class Sync:
     """
-    ALGO:
+    Manages synchronization between local and remote filesystems.
+
+    Algorithm:
     - Find all "container -> Docker image" mappings.
         - Need namespace + pod(s) ...
     - Find all "Docker image -> (copy: source -> target)" mappings.

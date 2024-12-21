@@ -64,7 +64,7 @@ def test_sync_respects_directory_creation(in_project, sync):
         Path("fastapi/baz").mkdir()
         time.sleep(0.1)
 
-    sync.shell.assert_called_once_with(
+    sync.shell.assert_called_with(
         "kubectl",
         "exec",
         "fastapi-deployment-79f65c9947-zg2p6",

@@ -6,7 +6,7 @@ from uuid import uuid4
 import pytest
 
 from ptah.clients import Docker, get
-from ptah.models import DockerImage
+from ptah.models import DockerCopyStatement, DockerImage
 
 
 def test_image_tag_is_consistent(project_cwd):
@@ -104,3 +104,45 @@ def test_push(capsys, project_cwd):
 
     assert "Pushing 1 image" in lines
     assert "Pushing 1 image (1 already pushed)" in lines
+
+
+def test_copy_statements_one_copy(project_cwd):
+    docker = get(Docker)
+    (project_cwd / "foo").mkdir()
+    (project_cwd / "foo.Dockerfile").write_text("FROM ubuntu\nCOPY foo /bar")
+    docker.project.dockerfiles = r"(?i)(?P<name>\w+)\.Dockerfile"
+    images = docker.image_definitions()
+    assert len(images) == 1
+    assert docker.copy_statements(images[0]) == [DockerCopyStatement("foo", "/bar")]
+
+
+def test_copy_statements_multiple_copy_statements(project_cwd):
+    docker = get(Docker)
+    (project_cwd / "foo").mkdir()
+    (project_cwd / "foo2").mkdir()
+    (project_cwd / "foo3/foo4").mkdir(parents=True)
+    (project_cwd / "foo.Dockerfile").write_text(
+        """
+FROM ubuntu
+COPY foo /bar
+COPY foo2 /bar2/baz
+COPY foo3/foo4 /bar3/bar4
+"""
+    )
+    docker.project.dockerfiles = r"(?i)(?P<name>\w+)\.Dockerfile"
+    images = docker.image_definitions()
+    assert len(images) == 1
+    assert docker.copy_statements(images[0]) == [
+        DockerCopyStatement("foo", "/bar"),
+        DockerCopyStatement("foo2", "/bar2/baz"),
+        DockerCopyStatement("foo3/foo4", "/bar3/bar4"),
+    ]
+
+
+def test_copy_statements_ignores_nonabsolute(project_cwd):
+    docker = get(Docker)
+    (project_cwd / "foo.Dockerfile").write_text("FROM ubuntu\nCOPY foo bar")
+    docker.project.dockerfiles = r"(?i)(?P<name>\w+)\.Dockerfile"
+    images = docker.image_definitions()
+    assert len(images) == 1
+    assert docker.copy_statements(images[0]) == []
