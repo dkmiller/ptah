@@ -8,6 +8,7 @@ from typing import Optional
 from injector import inject
 from pathspec import PathSpec
 from pathspec.patterns.gitwildmatch import GitWildMatchPattern
+from rich.console import Console
 from watchdog import events
 from watchdog.events import FileModifiedEvent, FileSystemEventHandler
 from watchdog.observers import Observer
@@ -61,7 +62,7 @@ class _Handler(FileSystemEventHandler):
 
     def relevant_target(self, pathish: bytes | str) -> Optional[str]:
         if not isinstance(pathish, str):
-            print(f"⚠️ Ignoring non-string path {pathish}")
+            self.shell.console.print(f"⚠️ Ignoring non-string path {pathish}")
             return
         path = Path(pathish)
         if self.is_relevant(path):
@@ -70,7 +71,9 @@ class _Handler(FileSystemEventHandler):
 
     def copy(self, pathish: bytes | str):
         if target := self.relevant_target(pathish):
-            print(f"{pathish} ↦ {self.pod}/{self.container}:{target}")
+            self.shell.console.print(
+                f"{pathish} ↦ {self.pod}/{self.container}:{target}"
+            )
             self.safely_shell(
                 "kubectl",
                 "cp",
@@ -115,7 +118,9 @@ class _Handler(FileSystemEventHandler):
         if (source := self.relevant_target(event.src_path)) and (
             target := self.relevant_target(event.dest_path)
         ):
-            print(f"{self.pod}/{self.container}:({source} ↦ {target})")
+            self.shell.console.print(
+                f"{self.pod}/{self.container}:({source} ↦ {target})"
+            )
             self.safely_shell(
                 "kubectl",
                 "exec",
@@ -144,6 +149,7 @@ class Sync:
         - Handler propagates the change via kubectl ... commands to the (namespace + pod + container).
     """
 
+    console: Console
     docker: Docker
     kubernetes: Kubernetes
     shell: Shell
@@ -168,7 +174,7 @@ class Sync:
                                 target=copy_statement.target,
                                 shell=self.shell,
                             )
-                            print(
+                            self.console.print(
                                 f"Syncing {copy_statement.source} ↦ {pod_name}/{container_name}:{copy_statement.target}"
                             )
                             observer.schedule(
