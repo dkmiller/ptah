@@ -1,0 +1,418 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "creationTimestamp": "2024-12-19T01:09:28Z",
+                "generateName": "fastapi-deployment-79f65c9947-",
+                "labels": {
+                    "app": "fastapi",
+                    "pod-template-hash": "79f65c9947"
+                },
+                "name": "fastapi-deployment-79f65c9947-zg2p6",
+                "namespace": "default",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "fastapi-deployment-79f65c9947",
+                        "uid": "68d808cd-1eee-46aa-ba74-1b4782ac0a2e"
+                    }
+                ],
+                "resourceVersion": "79545",
+                "uid": "78ff40d0-dc96-4c8a-875c-2c0e1a453d35"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "image": "fastapi:58e0cf0",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "fastapi",
+                        "ports": [
+                            {
+                                "containerPort": 8000,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "resources": {},
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-bcbx5",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "fastapi-control-plane",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {},
+                "serviceAccount": "default",
+                "serviceAccountName": "default",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "kube-api-access-bcbx5",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2024-12-19T01:09:28Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2024-12-19T01:09:28Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2024-12-19T01:09:28Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2024-12-19T01:09:28Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "containerID": "containerd://2f7a2d86f0cca91a2ff1ae663c92bae2c0c2d74288adb6ef9cf78cd8ebb6dc44",
+                        "image": "docker.io/library/fastapi:58e0cf0",
+                        "imageID": "docker.io/library/import-2024-12-19@sha256:ccd4cd16f02ce5b9b8241aadd940effa27ad79f907d8794bfe14ff84911b1da4",
+                        "lastState": {},
+                        "name": "fastapi",
+                        "ready": true,
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2024-12-19T01:09:28Z"
+                            }
+                        }
+                    }
+                ],
+                "hostIP": "172.18.0.2",
+                "phase": "Running",
+                "podIP": "10.244.0.7",
+                "podIPs": [
+                    {
+                        "ip": "10.244.0.7"
+                    }
+                ],
+                "qosClass": "BestEffort",
+                "startTime": "2024-12-19T01:09:28Z"
+            }
+        },
+        {
+            "apiVersion": "v1",
+            "kind": "Pod",
+            "metadata": {
+                "creationTimestamp": "2024-12-17T04:46:32Z",
+                "generateName": "kubernetes-dashboard-57b69f47-",
+                "labels": {
+                    "app.kubernetes.io/component": "kubernetes-dashboard",
+                    "app.kubernetes.io/instance": "kubernetes-dashboard",
+                    "app.kubernetes.io/managed-by": "Helm",
+                    "app.kubernetes.io/name": "kubernetes-dashboard",
+                    "app.kubernetes.io/version": "v2.7.0",
+                    "helm.sh/chart": "kubernetes-dashboard-6.0.8",
+                    "pod-template-hash": "57b69f47"
+                },
+                "name": "kubernetes-dashboard-57b69f47-gh2sf",
+                "namespace": "default",
+                "ownerReferences": [
+                    {
+                        "apiVersion": "apps/v1",
+                        "blockOwnerDeletion": true,
+                        "controller": true,
+                        "kind": "ReplicaSet",
+                        "name": "kubernetes-dashboard-57b69f47",
+                        "uid": "f65ca3f9-d508-4ad8-bb29-fcaa4b085956"
+                    }
+                ],
+                "resourceVersion": "516",
+                "uid": "9cc90f21-64a6-486e-9651-6557d1010fab"
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "args": [
+                            "--namespace=default",
+                            "--auto-generate-certificates",
+                            "--metrics-provider=none"
+                        ],
+                        "image": "kubernetesui/dashboard:v2.7.0",
+                        "imagePullPolicy": "IfNotPresent",
+                        "livenessProbe": {
+                            "failureThreshold": 3,
+                            "httpGet": {
+                                "path": "/",
+                                "port": 8443,
+                                "scheme": "HTTPS"
+                            },
+                            "initialDelaySeconds": 30,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "timeoutSeconds": 30
+                        },
+                        "name": "kubernetes-dashboard",
+                        "ports": [
+                            {
+                                "containerPort": 8443,
+                                "name": "https",
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "resources": {
+                            "limits": {
+                                "cpu": "2",
+                                "memory": "200Mi"
+                            },
+                            "requests": {
+                                "cpu": "100m",
+                                "memory": "200Mi"
+                            }
+                        },
+                        "securityContext": {
+                            "allowPrivilegeEscalation": false,
+                            "capabilities": {
+                                "drop": [
+                                    "ALL"
+                                ]
+                            },
+                            "readOnlyRootFilesystem": true,
+                            "runAsGroup": 2001,
+                            "runAsUser": 1001
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/certs",
+                                "name": "kubernetes-dashboard-certs"
+                            },
+                            {
+                                "mountPath": "/tmp",
+                                "name": "tmp-volume"
+                            },
+                            {
+                                "mountPath": "/var/run/secrets/kubernetes.io/serviceaccount",
+                                "name": "kube-api-access-wfpm4",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": true,
+                "nodeName": "fastapi-control-plane",
+                "preemptionPolicy": "PreemptLowerPriority",
+                "priority": 0,
+                "restartPolicy": "Always",
+                "schedulerName": "default-scheduler",
+                "securityContext": {
+                    "runAsNonRoot": true,
+                    "seccompProfile": {
+                        "type": "RuntimeDefault"
+                    }
+                },
+                "serviceAccount": "kubernetes-dashboard",
+                "serviceAccountName": "kubernetes-dashboard",
+                "terminationGracePeriodSeconds": 30,
+                "tolerations": [
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/not-ready",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    },
+                    {
+                        "effect": "NoExecute",
+                        "key": "node.kubernetes.io/unreachable",
+                        "operator": "Exists",
+                        "tolerationSeconds": 300
+                    }
+                ],
+                "volumes": [
+                    {
+                        "name": "kubernetes-dashboard-certs",
+                        "secret": {
+                            "defaultMode": 420,
+                            "secretName": "kubernetes-dashboard-certs"
+                        }
+                    },
+                    {
+                        "emptyDir": {},
+                        "name": "tmp-volume"
+                    },
+                    {
+                        "name": "kube-api-access-wfpm4",
+                        "projected": {
+                            "defaultMode": 420,
+                            "sources": [
+                                {
+                                    "serviceAccountToken": {
+                                        "expirationSeconds": 3607,
+                                        "path": "token"
+                                    }
+                                },
+                                {
+                                    "configMap": {
+                                        "items": [
+                                            {
+                                                "key": "ca.crt",
+                                                "path": "ca.crt"
+                                            }
+                                        ],
+                                        "name": "kube-root-ca.crt"
+                                    }
+                                },
+                                {
+                                    "downwardAPI": {
+                                        "items": [
+                                            {
+                                                "fieldRef": {
+                                                    "apiVersion": "v1",
+                                                    "fieldPath": "metadata.namespace"
+                                                },
+                                                "path": "namespace"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2024-12-17T04:46:32Z",
+                        "status": "True",
+                        "type": "Initialized"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2024-12-17T04:46:40Z",
+                        "status": "True",
+                        "type": "Ready"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2024-12-17T04:46:40Z",
+                        "status": "True",
+                        "type": "ContainersReady"
+                    },
+                    {
+                        "lastProbeTime": null,
+                        "lastTransitionTime": "2024-12-17T04:46:32Z",
+                        "status": "True",
+                        "type": "PodScheduled"
+                    }
+                ],
+                "containerStatuses": [
+                    {
+                        "containerID": "containerd://b36f6f7b88e1f0577a27db09348019fd5902e94f4ce96a59ea94ed2b33b73247",
+                        "image": "docker.io/kubernetesui/dashboard:v2.7.0",
+                        "imageID": "docker.io/kubernetesui/dashboard@sha256:2e500d29e9d5f4a086b908eb8dfe7ecac57d2ab09d65b24f588b1d449841ef93",
+                        "lastState": {},
+                        "name": "kubernetes-dashboard",
+                        "ready": true,
+                        "restartCount": 0,
+                        "started": true,
+                        "state": {
+                            "running": {
+                                "startedAt": "2024-12-17T04:46:39Z"
+                            }
+                        }
+                    }
+                ],
+                "hostIP": "172.18.0.2",
+                "phase": "Running",
+                "podIP": "10.244.0.5",
+                "podIPs": [
+                    {
+                        "ip": "10.244.0.5"
+                    }
+                ],
+                "qosClass": "Burstable",
+                "startTime": "2024-12-17T04:46:32Z"
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}

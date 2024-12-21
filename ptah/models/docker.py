@@ -3,6 +3,12 @@ from pathlib import Path
 
 
 @dataclass
+class DockerCopyStatement:
+    source: str
+    target: str
+
+
+@dataclass
 class DockerImage:
     """
     Local definition of Docker image.
@@ -14,4 +20,5 @@ class DockerImage:
 
     @property
     def uri(self):
+        # Future: ptah.local/{project}/{name}:tag
         return f"{self.name}:{self.tag}"

@@ -8,5 +8,6 @@ from .kind import Kind
 from .kubernetes import Kubernetes
 from .panic import PtahPanic
 from .project import Project
+from .shell import Shell
 from .version import Version
 from .yaml import Yaml
