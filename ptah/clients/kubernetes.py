@@ -16,6 +16,10 @@ from ptah.models import Project
 @inject
 @dataclass
 class Kubernetes:
+    """
+    Manage interactions with the Kubernetes control plane.
+    """
+
     console: Console
     docker: Docker
     engine: engine
