@@ -11,7 +11,10 @@ nav:
   - Reference:
     - ptah.yml: reference/project.md
     - CLI: reference/cli.md
-  - FAQ: faq.md
+    - Dependencies: reference/dependencies.md
+  - Explanation:
+    - FAQ: explanation/faq.md
+    - Concepts: explanation/concepts.md
 
 theme:
   name: material
@@ -28,3 +31,7 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format

@@ -7,6 +7,7 @@ the many commands you need to get up and running:
 - Initializing a local Kubernetes cluster
 - Building N Docker images and transferring them to the cluster
 - Port-forwarding all your deployments
+- Synchronizing your local filesystem with remote container for hot reload
 - (... and more)
 
 so you can focus on figuring out how to do whatever it is you're trying to achieve in a
