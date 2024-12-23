@@ -110,14 +110,17 @@ def dashboard():
 
 
 @app.command()
-def nuke():
+def nuke(docker: bool = True, kind: bool = True):
     """
-    Forcibly delete the Kind cluster and all related resources.
+    Forcibly delete the Kind cluster, all related resources, and prune dangling Docker images.
     """
     _forward(kill=True)
 
-    kind = get(Kind)
-    kind.delete()
+    if docker:
+        get(Docker).prune()
+
+    if kind:
+        get(Kind).delete()
 
     filesystem = get(Filesystem)
     filesystem.delete(filesystem.cache_location())
