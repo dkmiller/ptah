@@ -99,6 +99,9 @@ class Docker:
             self.shell.run(["docker", "build", "-t", image.uri, path])
             self.cache.set(f"build__{image.uri}", "any")
 
+    def prune(self):
+        self.shell("docker", "system", "prune", "-a", "-f", "--volumes")
+
     def push(self) -> None:
         push = []
         skip = 0
