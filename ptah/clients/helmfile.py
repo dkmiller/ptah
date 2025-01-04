@@ -58,7 +58,7 @@ class Helmfile:
         if "diff" not in self.shell("helm", "plugin", "list"):
             # https://github.com/roboll/helmfile/issues/1182
             self.shell.run(
-                "helm", "plugin", "install", "https://github.com/databus23/helm-diff"
+                ["helm", "plugin", "install", "https://github.com/databus23/helm-diff"]
             )
 
     def ensure_installed(self):
