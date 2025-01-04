@@ -12,6 +12,7 @@ docker --version
 ```
 
 [Helm](https://helm.sh/docs/intro/install/),
+the [Helm diff plugin](https://github.com/databus23/helm-diff), and
 [Helmfile](https://helmfile.readthedocs.io/en/latest/#installation)
 &mdash; if your project has a `helmfile.yaml` in its root.
 
