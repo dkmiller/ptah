@@ -83,13 +83,12 @@ class Process:
         return rv
 
     def terminate(self, args: List[str]):
-        print("boo!")
         processes = self.find(args)
         for process in processes:
-            print(f"Terminating {process.pid}", flush=True)
+            print(f"Terminating {process.pid}")
             process.terminate()
         if not processes:
-            print(f"Found no processes running `{args}`", flush=True)
+            print(f"Found no processes running `{args}`")
 
     def ensure(self, args: List[str]):
         processes = self.find(args)

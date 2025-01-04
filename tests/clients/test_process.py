@@ -56,7 +56,6 @@ def test_spawn_then_terminate():
     process.spawn(args)
     duration = 0.5
     sleep(duration)
-
     process.terminate(args)
 
     end = perf_counter()

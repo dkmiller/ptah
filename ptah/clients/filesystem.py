@@ -41,14 +41,12 @@ class Filesystem:
         filename = urlparse(url).path.split("/")[-1]
         rv = Path(root) / filename
         rv.touch()
-        # rv.parent.mkdir(parents=True, exist_ok=True)
-        
+
         # https://stackoverflow.com/a/7244263
         with urllib.request.urlopen(url) as source, rv.open("rb+") as dest:
             shutil.copyfileobj(source, dest)
 
         return rv
-
 
     def package_root(self) -> Path:
         """
