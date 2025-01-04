@@ -19,15 +19,3 @@ spec:
         image: kennethreitz/httpbin:latest
         ports:
         - containerPort: 80
-
----
-
-kind: Service
-apiVersion: v1
-metadata:
-  name: httpbin-service
-spec:
-  selector:
-    app: httpbin
-  ports:
-  - port: 80
