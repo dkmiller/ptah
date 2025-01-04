@@ -1,4 +1,7 @@
+import platform
 import shutil
+import stat
+import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -53,8 +56,27 @@ class Kind:
             case OperatingSystem.WINDOWS:
                 args = ["winget", "install", "Kubernetes.kind"]
             # TODO: https://medium.com/@binitabharati/setting-up-kind-cluster-9393aacbef43
-            case default:
-                raise RuntimeError(f"Unsupported operating system {default}")
+            case OperatingSystem.LINUX:
+                match platform.uname().machine:
+                    case "arm64":
+                        suffix = "arm64"
+                    case "x86_64":
+                        suffix = "amd64"
+                    case default:
+                        raise RuntimeError(f"Unsupported architecture {default}")
+                # https://kind.sigs.k8s.io/docs/user/quick-start/#installing-from-release-binaries
+                url = f"https://kind.sigs.k8s.io/dl/v0.26.0/kind-linux-{suffix}"
+
+                # https://stackoverflow.com/a/7244263
+                with urllib.request.urlopen(url) as response, open("kind", 'wb') as out_file:
+                    shutil.copyfileobj(response, out_file)
+
+                path = Path("kind")
+
+                # https://stackoverflow.com/a/56049405
+                path.chmod(path.stat().st_mode | stat.S_IEXEC)
+
+                args = ["sudo", "mv", str(path.absolute()), "/usr/local/bin/kind"]
 
         self.shell.run(args)
 

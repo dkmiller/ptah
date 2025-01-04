@@ -1,3 +1,4 @@
+import platform
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
@@ -27,17 +28,31 @@ class Helmfile:
 
     def install(self):
         """
-        https://kind.sigs.k8s.io/docs/user/quick-start/#installing-with-a-package-manager
+        https://helmfile.readthedocs.io/en/latest/#installation
         """
         match self.os:
             case OperatingSystem.MACOS:
                 args = ["brew", "install", "helmfile"]
             case OperatingSystem.WINDOWS:
                 args = ["scoop", "install", "helmfile"]
-            case default:
-                raise RuntimeError(f"Unsupported operating system {default}")
+            case OperatingSystem.LINUX:
+                match platform.uname().machine:
+                    case "arm64":
+                        suffix = "arm64"
+                    case "x86_64":
+                        suffix = "amd64"
+                    case default:
+                        raise RuntimeError(f"Unsupported architecture {default}")
+                url = f"https://github.com/helmfile/helmfile/releases/download/v0.169.2/helmfile_0.169.2_linux_{suffix}.tar.gz"
+                tarball = self.filesystem.download(url)
+                # https://stackoverflow.com/a/56182972
+                shutil.unpack_archive(tarball, tarball.parent)
+                args = ["sudo", "mv", str(tarball.parent / "helmfile"), "/usr/local/bin/helmfile"]
 
         self.shell.run(args)
+        if "diff" not in self.shell("helm", "plugin", "list"):
+            # https://github.com/roboll/helmfile/issues/1182
+            self.shell.run("helm", "plugin", "install", "https://github.com/databus23/helm-diff")
 
     def ensure_installed(self):
         if not self.is_installed():
