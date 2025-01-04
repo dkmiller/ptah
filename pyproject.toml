@@ -26,15 +26,15 @@ dev = [
     "build==1.2.2.post1",
     "isort==5.13.2",
     "pre-commit==4.0.1",
-    "pyright==1.1.389",
+    "pyright==1.1.391",
     "pytest==8.3.4",
     "pytest-cov==6.0.0",
-    "ruff==0.8.1",
+    "ruff==0.8.4",
 ]
 doc = [
     "mkdocs==1.6.1",
     "mkdocs-click==0.8.1",
-    "mkdocs-material==9.5.47",
+    "mkdocs-material==9.5.49",
 ]
 
 [project.scripts]
