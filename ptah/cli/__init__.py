@@ -24,6 +24,26 @@ from ptah.operations import Sync
 app = typer.Typer(pretty_exceptions_enable=False)
 
 
+def version(value: bool):
+    """
+    Current version of the Ptah CLI.
+    """
+    if value:
+        print(get(Version).version())
+        raise typer.Exit()
+
+
+@app.callback()
+def common(
+    ctx: typer.Context,
+    version: bool = typer.Option(None, "--version", callback=version),
+):
+    """
+    https://stackoverflow.com/a/71008105
+    """
+    pass
+
+
 @app.command()
 def project(output: Serialization = Serialization.yaml):
     """
@@ -37,14 +57,6 @@ def project(output: Serialization = Serialization.yaml):
         case Serialization.yaml:
             serialized = get(Yaml).dumps(deserialized)
     print(serialized)
-
-
-@app.command()
-def version():
-    """
-    Current version of the Ptah CLI.
-    """
-    print(get(Version).version())
 
 
 @app.command(name="build")
