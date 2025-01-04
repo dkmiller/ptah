@@ -50,6 +50,10 @@ exclude=["examples"]
 
 [tool.pytest.ini_options]
 addopts = "--cov=ptah --junitxml=coverage.xml"
+# https://stackoverflow.com/a/59383021
+filterwarnings = [
+    "error",
+]
 
 [tool.ruff.lint.per-file-ignores]
 "**/__init__.py" = ["F401"]

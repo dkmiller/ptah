@@ -46,6 +46,8 @@ def test_run():
     assert end - start < 0.7
 
 
+# TODO: can we remove this?
+@pytest.mark.filterwarnings("ignore::pytest.PytestUnraisableExceptionWarning")
 def test_spawn_then_terminate():
     process = get(Process)
     args = ["sleep", "10"]
@@ -54,6 +56,7 @@ def test_spawn_then_terminate():
     process.spawn(args)
     duration = 0.5
     sleep(duration)
+
     process.terminate(args)
 
     end = perf_counter()

@@ -1,7 +1,6 @@
 import platform
 import shutil
 import stat
-import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -48,7 +47,7 @@ class Kind:
 
     def install(self):
         """
-        https://kind.sigs.k8s.io/docs/user/quick-start/#installing-with-a-package-manager
+        https://kind.sigs.k8s.io/docs/user/quick-start/
         """
         match self.os:
             case OperatingSystem.MACOS:
@@ -64,14 +63,8 @@ class Kind:
                         suffix = "amd64"
                     case default:
                         raise RuntimeError(f"Unsupported architecture {default}")
-                # https://kind.sigs.k8s.io/docs/user/quick-start/#installing-from-release-binaries
                 url = f"https://kind.sigs.k8s.io/dl/v0.26.0/kind-linux-{suffix}"
-
-                # https://stackoverflow.com/a/7244263
-                with urllib.request.urlopen(url) as response, open("kind", 'wb') as out_file:
-                    shutil.copyfileobj(response, out_file)
-
-                path = Path("kind")
+                path = self.filesystem.download(url)
 
                 # https://stackoverflow.com/a/56049405
                 path.chmod(path.stat().st_mode | stat.S_IEXEC)

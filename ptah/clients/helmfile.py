@@ -46,13 +46,20 @@ class Helmfile:
                 url = f"https://github.com/helmfile/helmfile/releases/download/v0.169.2/helmfile_0.169.2_linux_{suffix}.tar.gz"
                 tarball = self.filesystem.download(url)
                 # https://stackoverflow.com/a/56182972
-                shutil.unpack_archive(tarball, tarball.parent)
-                args = ["sudo", "mv", str(tarball.parent / "helmfile"), "/usr/local/bin/helmfile"]
+                shutil.unpack_archive(tarball, tarball.parent, filter="tar")
+                args = [
+                    "sudo",
+                    "mv",
+                    str(tarball.parent / "helmfile"),
+                    "/usr/local/bin/helmfile",
+                ]
 
         self.shell.run(args)
         if "diff" not in self.shell("helm", "plugin", "list"):
             # https://github.com/roboll/helmfile/issues/1182
-            self.shell.run("helm", "plugin", "install", "https://github.com/databus23/helm-diff")
+            self.shell.run(
+                "helm", "plugin", "install", "https://github.com/databus23/helm-diff"
+            )
 
     def ensure_installed(self):
         if not self.is_installed():
