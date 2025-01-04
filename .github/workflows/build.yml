@@ -60,6 +60,9 @@ jobs:
         if_true: true
 
     - if: ${{ steps.singleton.outputs.value }}
+      run: pytest -m e2e
+
+    - if: ${{ steps.singleton.outputs.value }}
       uses: EnricoMi/publish-unit-test-result-action@v2
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}

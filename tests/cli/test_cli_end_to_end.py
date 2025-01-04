@@ -1,49 +1,60 @@
-import os
-from pathlib import Path
-
+import httpx
 import pytest
-from pytest import fixture
+from typer.testing import CliRunner
 
-from ptah.cli import build, deploy, nuke, project
+from ptah.cli import app
 from ptah.clients import get
 from ptah.models import OperatingSystem
 
-# TODO: systematic way of skipping the slow tests by default.
-
 # https://stackoverflow.com/a/71264963
-if get(OperatingSystem) != OperatingSystem.MACOS:
+if get(OperatingSystem) != OperatingSystem.LINUX:
     pytest.skip(reason="unsupported", allow_module_level=True)
 
 
-@fixture
-def test_project_cwd():
-    cwd = Path.cwd()
-    target_path = Path(__file__).parents[1] / "test-project"
-    os.chdir(target_path)
-    yield target_path
-    os.chdir(cwd)
+@pytest.mark.e2e
+@pytest.mark.parametrize("in_project", ["project-with-fastapi"], indirect=True)
+@pytest.mark.timeout(60)
+def test_build(in_project):
+    runner = CliRunner()
+    result = runner.invoke(app, ["build"])
+    assert result.exit_code == 0
+    assert "Building 1 Docker image" in result.stdout
+    assert "Copying 1 manifest" in result.stdout
 
 
-def test_project(test_project_cwd):
-    project()
+@pytest.mark.e2e
+@pytest.mark.parametrize("in_project", ["project-with-fastapi"], indirect=True)
+@pytest.mark.timeout(60 * 5)
+@pytest.mark.filterwarnings("ignore::pytest.PytestUnraisableExceptionWarning")
+def test_deploy(in_project):
+    runner = CliRunner()
+    result = runner.invoke(app, ["deploy"])
+    assert result.exit_code == 0, f"STDOUT: {result.stdout} + STDERR: {result.stderr}"
 
 
-def test_build(test_project_cwd):
-    build()
+@pytest.mark.e2e
+@pytest.mark.timeout(30)
+def test_deployed_service_is_functional():
+    success = False
+    while not success:
+        try:
+            response = httpx.get("http://localhost:8000/probe")
+            assert response.is_success
+            assert "headers" in response.json()
+            success = True
+        except Exception as e:
+            print(e)
+            import time
+
+            time.sleep(1)
 
 
-def test_deploy(test_project_cwd):
-    assert os.system("brew install docker") == 0
-    assert os.system("brew install kubectl") == 0
-    # https://stackoverflow.com/a/77741339
-    assert os.system("open -a Docker") == 0
-    deploy()
+@pytest.mark.e2e
+@pytest.mark.parametrize("in_project", ["project-with-fastapi"], indirect=True)
+@pytest.mark.timeout(30)
+def test_nuke(in_project):
+    runner = CliRunner()
+    result = runner.invoke(app, ["nuke"])
+    assert result.exit_code == 0, f"STDOUT: {result.stdout} + STDERR: {result.stderr}"
 
-
-def test_nuke(test_project_cwd):
-    nuke()
-
-
-# TODO: https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/#install-with-homebrew-on-macos
-
-# @pytest.mark.timeout(60)
+    # TODO: assert no running Kind clusters.

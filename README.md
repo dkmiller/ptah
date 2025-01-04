@@ -42,3 +42,9 @@ Try to add documentation for any new feature you build. When possible it should 
 ```bash
 mkdocs serve
 ```
+
+TODO: run end-to-end tests.
+
+```bash
+pytest -m e2e
+```
