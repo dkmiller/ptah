@@ -4,10 +4,8 @@ from uuid import uuid4
 import pytest
 
 from ptah.clients import Kind, get
-from ptah.models import OperatingSystem
 
 
-@pytest.mark.skipif(get(OperatingSystem) == OperatingSystem.LINUX, reason="unsupported")
 def test_install(tmp_cwd):
     (tmp_cwd / "ptah.yml").write_text("kind: {name: foo}")
     kind = get(Kind)
@@ -28,3 +26,18 @@ def test_create(tmp_cwd):
     kind.create()
 
     assert name in kind.shell.call_args.args
+
+
+@pytest.mark.parametrize("in_project", ["project-with-kind-config"], indirect=True)
+def test_kind_path(in_project):
+    kind = get(Kind)
+    path = kind.path()
+
+    assert path
+    assert path.name == "kind.yml"
+
+
+@pytest.mark.parametrize("in_project", ["project-with-kind-config"], indirect=True)
+def test_cluster_name(in_project):
+    kind = get(Kind)
+    assert kind.cluster_name() == "some-kind-cluster-name"

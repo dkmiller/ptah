@@ -1,3 +1,4 @@
+import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -6,6 +7,7 @@ from inflect import engine
 from injector import inject
 from rich.console import Console
 
+from ptah.clients.docker import Docker
 from ptah.clients.filesystem import Filesystem
 from ptah.clients.shell import Shell
 from ptah.models import Project
@@ -14,7 +16,12 @@ from ptah.models import Project
 @inject
 @dataclass
 class Kubernetes:
+    """
+    Manage interactions with the Kubernetes control plane.
+    """
+
     console: Console
+    docker: Docker
     engine: engine
     filesystem: Filesystem
     project: Project
@@ -35,6 +42,10 @@ class Kubernetes:
 
         for manifest in manifests:
             content = manifest.read_text()
+
+            for image in self.docker.image_definitions():
+                content = re.sub(rf"ptah://{image.name}(?!\w)", image.uri, content)
+
             relative = str(manifest.relative_to(source))
             target_path = Path(target) / relative
             target_path.parent.mkdir(parents=True, exist_ok=True)
@@ -71,3 +82,6 @@ class Kubernetes:
 
         for w in watch:
             self.shell.run(w)
+
+    def pods(self) -> dict:
+        return json.loads(self.shell("kubectl", "get", "pods", "-o", "json"))

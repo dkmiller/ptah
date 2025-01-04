@@ -1,3 +1,4 @@
+import platform
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
@@ -27,35 +28,56 @@ class Helmfile:
 
     def install(self):
         """
-        https://kind.sigs.k8s.io/docs/user/quick-start/#installing-with-a-package-manager
+        https://helmfile.readthedocs.io/en/latest/#installation
         """
         match self.os:
             case OperatingSystem.MACOS:
                 args = ["brew", "install", "helmfile"]
             case OperatingSystem.WINDOWS:
                 args = ["scoop", "install", "helmfile"]
-            case default:
-                raise RuntimeError(f"Unsupported operating system {default}")
+            case OperatingSystem.LINUX:
+                match platform.uname().machine:
+                    case "arm64":
+                        suffix = "arm64"
+                    case "x86_64":
+                        suffix = "amd64"
+                    case default:
+                        raise RuntimeError(f"Unsupported architecture {default}")
+                url = f"https://github.com/helmfile/helmfile/releases/download/v0.169.2/helmfile_0.169.2_linux_{suffix}.tar.gz"
+                tarball = self.filesystem.download(url)
+                # https://stackoverflow.com/a/56182972
+                shutil.unpack_archive(tarball, tarball.parent, filter="tar")
+                args = [
+                    "sudo",
+                    "mv",
+                    str(tarball.parent / "helmfile"),
+                    "/usr/local/bin/helmfile",
+                ]
 
         self.shell.run(args)
+        if "diff" not in self.shell("helm", "plugin", "list"):
+            # https://github.com/roboll/helmfile/issues/1182
+            self.shell.run(
+                ["helm", "plugin", "install", "https://github.com/databus23/helm-diff"]
+            )
 
     def ensure_installed(self):
         if not self.is_installed():
             self.install()
 
-    def helmfile_exists(self, target: Path) -> bool:
-        helmfile = target / "helmfile.yaml"
-        return helmfile.is_file()
+    def path(self) -> Path:
+        return self.filesystem.project_root() / "helmfile.yaml"
 
-    def sync(self, target: Path | None = None) -> None:
-        target = target or self.filesystem.project_root()
-        if self.helmfile_exists(target):
+    def helmfile_exists(self) -> bool:
+        return self.path().is_file()
+
+    def sync(self) -> None:
+        if self.helmfile_exists():
             self.ensure_installed()
             self.console.print("Syncing Helmfile")
-            self.shell("helmfile", "sync")
+            self.shell("helmfile", "sync", "--file", str(self.path()))
 
-    def apply(self, target: Path | None = None) -> None:
-        target = target or self.filesystem.project_root()
-        if self.helmfile_exists(target):
+    def apply(self) -> None:
+        if self.helmfile_exists():
             self.console.print("Applying Helmfile")
-            self.shell("helmfile", "apply")
+            self.shell("helmfile", "apply", "--file", str(self.path()))

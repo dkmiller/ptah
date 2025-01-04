@@ -1,4 +1,5 @@
 import json
+import time
 from dataclasses import asdict
 
 import typer
@@ -6,6 +7,7 @@ from typer.main import get_command
 
 from ptah.clients import (
     Dashboard,
+    Docker,
     Filesystem,
     Forward,
     Helmfile,
@@ -17,8 +19,9 @@ from ptah.clients import (
     get,
 )
 from ptah.models import Serialization
+from ptah.operations import Sync
 
-app = typer.Typer()
+app = typer.Typer(pretty_exceptions_enable=False)
 
 
 @app.command()
@@ -44,22 +47,26 @@ def version():
     print(get(Version).version())
 
 
-@app.command()
-def build():
+@app.command(name="build")
+def _build():
     """
     Copy all Kubernetes manifests from the current project into the `build_output` directory.
     """
+    docker = get(Docker)
+    docker.build()
+
     k8s = get(Kubernetes)
     k8s.build()
 
 
 @app.command()
-def deploy():
+def deploy(build: bool = True, forward: bool = True, sync: bool = False):
     """
     Build the project, ensure the Kind CLI and cluster exit, sync and apply Helm charts, apply
-    Kubernetes manifests, and set up port-forwarding from the cluster to loclhost.
+    Kubernetes manifests, and set up port-forwarding from the cluster to localhost.
     """
-    build()
+    if build:
+        _build()
 
     kind = get(Kind)
     kind.ensure_installed()
@@ -69,14 +76,20 @@ def deploy():
     helm.sync()
     helm.apply()
 
+    docker = get(Docker)
+    docker.push()
     get(Kubernetes).apply()
 
-    forward(kill=True)
-    forward(kill=False)
+    if forward:
+        _forward(kill=True)
+        _forward(kill=False)
+
+    if sync:
+        _sync()
 
 
-@app.command()
-def forward(kill: bool = False):
+@app.command(name="forward")
+def _forward(kill: bool = False):
     """
     Forward the Kubernetes API server and all deployment ports to localhost; alternatively kill
     all active "port forward" sessions.
@@ -97,17 +110,35 @@ def dashboard():
 
 
 @app.command()
-def nuke():
+def nuke(docker: bool = True, kind: bool = True):
     """
-    Forcibly delete the Kind cluster and all related resources.
+    Forcibly delete the Kind cluster, all related resources, and prune dangling Docker images.
     """
-    forward(kill=True)
+    _forward(kill=True)
 
-    kind = get(Kind)
-    kind.delete()
+    if docker:
+        get(Docker).prune()
+
+    if kind:
+        get(Kind).delete()
 
     filesystem = get(Filesystem)
     filesystem.delete(filesystem.cache_location())
+
+
+@app.command(name="sync")
+def _sync():
+    """
+    Find all Ptah-managed Docker images containing copy statements like
+
+    > COPY source /target
+
+    and synchronize the contents of the source directory with the target directory in all running
+    pods using that image.
+    """
+    with get(Sync).run():
+        while True:
+            time.sleep(1)
 
 
 # Create a "nicely named" Click command object for generated docs.

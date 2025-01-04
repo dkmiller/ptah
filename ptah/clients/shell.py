@@ -1,11 +1,12 @@
 import subprocess
-import sys
 from dataclasses import dataclass
 from typing import List
 
 from injector import inject
 from rich.console import Console
 from rich.syntax import Syntax
+
+from ptah.clients.panic import Panic
 
 
 @inject
@@ -19,6 +20,7 @@ class Shell:
     """
 
     console: Console
+    panic: Panic
 
     def __call__(self, *args: str) -> str:
         return self.run(list(args))
@@ -40,10 +42,10 @@ class Shell:
                 # https://johnlekberg.com/blog/2020-04-03-codec-errors.html
                 self.console.print(result.stdout.decode(errors="replace"))
                 self.console.print(result.stderr.decode(errors="replace"))
-                self.console.print(
-                    f"[red]💥 The command below exited with status {result.returncode}:[/red]"
-                )
                 self.console.print(syntax)
-                sys.exit(result.returncode)
+                self.panic(
+                    f"💥 The command above exited with status {result.returncode}.",
+                    return_code=result.returncode,
+                )
 
         return result.stdout.decode(errors="replace").strip()

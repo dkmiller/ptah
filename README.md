@@ -13,7 +13,7 @@ hosting.
 To install the Ptah CLI from source, either pip install directly:
 
 ```bash
-pip install -e ".[dev]"
+pip install -e ".[dev,doc]"
 ```
 
 or, if you do not have a compatible version of Python,
@@ -30,5 +30,15 @@ Run automatic formatting / lint fixes via
 ruff check --fix . && ruff format . && isort . && pyright
 ```
 
+Alternatively, leverage our [pre-commit](https://pre-commit.com/) configuration:
+
+```bash
+pre-commit install
+```
+
 Try to add documentation for any new feature you build. When possible it should follow
-[Diátaxis](https://diataxis.fr/).
+[Diátaxis](https://diataxis.fr/). You may host a local copy of the docs by running
+
+```bash
+mkdocs serve
+```

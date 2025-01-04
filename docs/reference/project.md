@@ -10,6 +10,7 @@ Here is an example illustrating the expected structure, including a
 ``` yaml
 kind:
   name: your_kind_cluster_name
+  config: kind.yml # https://kind.sigs.k8s.io/docs/user/configuration/
 
 api_server:
   port: 9263 # Port for the Kubernetes API server

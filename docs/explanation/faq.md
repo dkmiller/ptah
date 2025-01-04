@@ -14,7 +14,7 @@ If you see this message when visiting the Kubernetes dashboard, follow
 
 ## zsh compinit: insecure files
 
-If you encounter this message after [installing completions for Zsh](./reference/cli.md), follow
+If you encounter this message after [installing completions for Zsh](../reference/cli.md), follow
 [this suggestion](https://stackoverflow.com/a/22753363) and run the commands below.
 
 ``` bash
