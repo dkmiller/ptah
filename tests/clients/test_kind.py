@@ -4,10 +4,8 @@ from uuid import uuid4
 import pytest
 
 from ptah.clients import Kind, get
-from ptah.models import OperatingSystem
 
 
-@pytest.mark.skipif(get(OperatingSystem) == OperatingSystem.LINUX, reason="unsupported")
 def test_install(tmp_cwd):
     (tmp_cwd / "ptah.yml").write_text("kind: {name: foo}")
     kind = get(Kind)

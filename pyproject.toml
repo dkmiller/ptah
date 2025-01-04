@@ -1,7 +1,7 @@
 [project]
 name = "ptah-cli"
 readme = "README.md"
-version = "0.5.1"
+version = "0.5.2"
 authors = [
     { name = "Dan Miller", email = "daniel.keegan.miller@gmail.com" }
 ]
@@ -50,6 +50,10 @@ exclude=["examples"]
 
 [tool.pytest.ini_options]
 addopts = "--cov=ptah --junitxml=coverage.xml"
+# https://stackoverflow.com/a/59383021
+filterwarnings = [
+    "error",
+]
 
 [tool.ruff.lint.per-file-ignores]
 "**/__init__.py" = ["F401"]
