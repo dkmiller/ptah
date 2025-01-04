@@ -21,13 +21,13 @@ jobs:
     strategy:
       matrix:
         os:
-        # - macos-latest
+        - macos-latest
         - ubuntu-latest
-        # - windows-latest
+        - windows-latest
         python-version:
-        # - 3.11
+        - 3.11
         - 3.12
-        # - 3.13
+        - 3.13
 
     runs-on: ${{ matrix.os }}
 
@@ -60,9 +60,6 @@ jobs:
         if_true: true
 
     - if: ${{ steps.singleton.outputs.value }}
-      run: pytest -m e2e
-
-    - if: ${{ steps.singleton.outputs.value }}
       uses: EnricoMi/publish-unit-test-result-action@v2
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -72,6 +69,9 @@ jobs:
       uses: codecov/codecov-action@v5
       with:
         use_oidc: true
+
+    - if: ${{ steps.singleton.outputs.value }}
+      run: pytest -m e2e
 
     - uses: actions/upload-artifact@v4
       with:

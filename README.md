@@ -43,7 +43,8 @@ Try to add documentation for any new feature you build. When possible it should 
 mkdocs serve
 ```
 
-TODO: run end-to-end tests.
+The lengthy series of tests in [test_cli_end_to_end.py](./tests/cli/test_cli_end_to_end.py) are
+skipped by default. To force them to run, use the command:
 
 ```bash
 pytest -m e2e

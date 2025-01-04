@@ -14,6 +14,7 @@ from ptah.clients import (
     Kind,
     Kubernetes,
     Project,
+    PtahPanic,
     Version,
     Yaml,
     get,
@@ -126,7 +127,10 @@ def nuke(docker: bool = True, kind: bool = True):
     """
     Forcibly delete the Kind cluster, all related resources, and prune dangling Docker images.
     """
-    _forward(kill=True)
+    try:
+        _forward(kill=True)
+    except SystemExit:
+        pass
 
     if docker:
         get(Docker).prune()

@@ -62,7 +62,7 @@ filterwarnings = [
 ]
 # https://stackoverflow.com/a/60813297
 markers = [
-    "e2e: marks tests as end-to-end (TODO)",
+    "e2e: marks tests as end-to-end (these will be skipped by default)",
 ]
 
 [tool.ruff.lint.per-file-ignores]

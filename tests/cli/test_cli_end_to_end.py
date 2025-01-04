@@ -1,10 +1,15 @@
+import logging
+import time
+
 import httpx
 import pytest
 from typer.testing import CliRunner
 
 from ptah.cli import app
-from ptah.clients import get
+from ptah.clients import Shell, get
 from ptah.models import OperatingSystem
+
+log = logging.getLogger(__name__)
 
 # https://stackoverflow.com/a/71264963
 if get(OperatingSystem) != OperatingSystem.LINUX:
@@ -29,7 +34,7 @@ def test_build(in_project):
 def test_deploy(in_project):
     runner = CliRunner()
     result = runner.invoke(app, ["deploy"])
-    assert result.exit_code == 0, f"STDOUT: {result.stdout} + STDERR: {result.stderr}"
+    assert result.exit_code == 0, result.stdout
 
 
 @pytest.mark.e2e
@@ -43,8 +48,7 @@ def test_deployed_service_is_functional():
             assert "headers" in response.json()
             success = True
         except Exception as e:
-            print(e)
-            import time
+            log.warning(e)
 
             time.sleep(1)
 
@@ -55,6 +59,6 @@ def test_deployed_service_is_functional():
 def test_nuke(in_project):
     runner = CliRunner()
     result = runner.invoke(app, ["nuke"])
-    assert result.exit_code == 0, f"STDOUT: {result.stdout} + STDERR: {result.stderr}"
+    assert result.exit_code == 0, result.stdout
 
-    # TODO: assert no running Kind clusters.
+    assert not get(Shell).run(["kind", "get", "clusters"])
