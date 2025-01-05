@@ -1,3 +1,4 @@
+import logging
 import time
 
 import httpx
@@ -7,6 +8,8 @@ from typer.testing import CliRunner
 from ptah.cli import app
 from ptah.clients import Shell, get
 from ptah.models import OperatingSystem
+
+log = logging.getLogger(__name__)
 
 # https://stackoverflow.com/a/71264963
 if get(OperatingSystem) != OperatingSystem.LINUX:
@@ -35,13 +38,20 @@ def test_deploy(in_project):
 
 
 @pytest.mark.e2e
+@pytest.mark.timeout(20)
 def test_deployed_service_is_functional():
-    # It takes the port-forwarding process a second to boot up.
-    time.sleep(1)
+    # Poor man's external liveness probe.
+    success = False
+    while not success:
+        try:
+            response = httpx.get("http://localhost:8000/probe")
+            assert response.is_success
+            assert "headers" in response.json()
+            success = True
+        except Exception as e:
+            log.warning(e)
 
-    response = httpx.get("http://localhost:8000/probe")
-    assert response.is_success
-    assert "headers" in response.json()
+            time.sleep(1)
 
 
 @pytest.mark.e2e
