@@ -1,3 +1,5 @@
+import time
+
 import httpx
 import pytest
 from typer.testing import CliRunner
@@ -34,6 +36,9 @@ def test_deploy(in_project):
 
 @pytest.mark.e2e
 def test_deployed_service_is_functional():
+    # It takes the port-forwarding process a second to boot up.
+    time.sleep(1)
+
     response = httpx.get("http://localhost:8000/probe")
     assert response.is_success
     assert "headers" in response.json()
