@@ -1,6 +1,3 @@
-import logging
-import time
-
 import httpx
 import pytest
 from typer.testing import CliRunner
@@ -8,8 +5,6 @@ from typer.testing import CliRunner
 from ptah.cli import app
 from ptah.clients import Shell, get
 from ptah.models import OperatingSystem
-
-log = logging.getLogger(__name__)
 
 # https://stackoverflow.com/a/71264963
 if get(OperatingSystem) != OperatingSystem.LINUX:
@@ -38,19 +33,10 @@ def test_deploy(in_project):
 
 
 @pytest.mark.e2e
-@pytest.mark.timeout(30)
 def test_deployed_service_is_functional():
-    success = False
-    while not success:
-        try:
-            response = httpx.get("http://localhost:8000/probe")
-            assert response.is_success
-            assert "headers" in response.json()
-            success = True
-        except Exception as e:
-            log.warning(e)
-
-            time.sleep(1)
+    response = httpx.get("http://localhost:8000/probe")
+    assert response.is_success
+    assert "headers" in response.json()
 
 
 @pytest.mark.e2e

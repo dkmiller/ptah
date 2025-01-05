@@ -1,4 +1,5 @@
 import json
+import os
 import shutil
 import time
 from pathlib import Path
@@ -78,15 +79,16 @@ def test_sync_respects_directory_creation(in_project, sync):
     )
 
 
+# TODO: figure out why this test passes locally in my M1 MacBook but not remotely.
 @pytest.mark.skipif(
-    get(OperatingSystem) == OperatingSystem.MACOS, reason="unexpected failure"
+    get(OperatingSystem) == OperatingSystem.MACOS and "GITHUB_ACTION" in os.environ,
+    reason="unexpected failure",
 )
 @pytest.mark.parametrize("in_project", ["project-with-fastapi"], indirect=True)
 def test_sync_respects_dockerignore(in_project, sync):
     with sync.run():
-        time.sleep(0.2)
         Path("fastapi/ignore").touch()
-        time.sleep(0.2)
+        time.sleep(0.1)
 
     sync.shell.assert_not_called()
 
