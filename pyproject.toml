@@ -24,11 +24,13 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "build==1.2.2.post1",
+    "httpx==0.28.1",
     "isort==5.13.2",
     "pre-commit==4.0.1",
     "pyright==1.1.391",
     "pytest==8.3.4",
     "pytest-cov==6.0.0",
+    "pytest-timeout==2.3.1",
     "ruff==0.8.4",
 ]
 doc = [
@@ -46,14 +48,23 @@ profile = "black"
 
 # https://microsoft.github.io/pyright/#/configuration
 [tool.pyright]
-exclude=["examples"]
+exclude=[
+    "examples",
+    "tests/projects",
+]
 
 [tool.pytest.ini_options]
-addopts = "--cov=ptah --junitxml=coverage.xml"
+# https://stackoverflow.com/a/68590025
+addopts = "-m 'not e2e' --cov=ptah --junitxml=coverage.xml"
 # https://stackoverflow.com/a/59383021
 filterwarnings = [
     "error",
 ]
+# https://stackoverflow.com/a/60813297
+markers = [
+    "e2e: marks tests as end-to-end (these will be skipped by default)",
+]
+timeout = 180
 
 [tool.ruff.lint.per-file-ignores]
 "**/__init__.py" = ["F401"]

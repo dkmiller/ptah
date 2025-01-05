@@ -70,6 +70,9 @@ jobs:
       with:
         use_oidc: true
 
+    - if: ${{ steps.singleton.outputs.value }}
+      run: pytest -m e2e
+
     - uses: actions/upload-artifact@v4
       with:
         name: release-dists
