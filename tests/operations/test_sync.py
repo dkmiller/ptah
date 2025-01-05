@@ -80,8 +80,9 @@ def test_sync_respects_directory_creation(in_project, sync):
 @pytest.mark.parametrize("in_project", ["project-with-fastapi"], indirect=True)
 def test_sync_respects_dockerignore(in_project, sync):
     with sync.run():
+        time.sleep(0.2)
         Path("fastapi/ignore").touch()
-        time.sleep(0.1)
+        time.sleep(0.2)
 
     sync.shell.assert_not_called()
 
