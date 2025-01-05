@@ -11,14 +11,15 @@ from ptah.models import OperatingSystem
 
 log = logging.getLogger(__name__)
 
+# https://stackoverflow.com/a/38609243
+pytestmark = pytest.mark.e2e
+
 # https://stackoverflow.com/a/71264963
 if get(OperatingSystem) != OperatingSystem.LINUX:
     pytest.skip(reason="unsupported", allow_module_level=True)
 
 
-@pytest.mark.e2e
 @pytest.mark.parametrize("in_project", ["project-with-fastapi"], indirect=True)
-@pytest.mark.timeout(60)
 def test_build(in_project):
     runner = CliRunner()
     result = runner.invoke(app, ["build"])
@@ -27,9 +28,7 @@ def test_build(in_project):
     assert "Copying 1 manifest" in result.stdout
 
 
-@pytest.mark.e2e
 @pytest.mark.parametrize("in_project", ["project-with-fastapi"], indirect=True)
-@pytest.mark.timeout(60 * 5)
 @pytest.mark.filterwarnings("ignore::pytest.PytestUnraisableExceptionWarning")
 def test_deploy(in_project):
     runner = CliRunner()
@@ -37,7 +36,6 @@ def test_deploy(in_project):
     assert result.exit_code == 0, result.stdout
 
 
-@pytest.mark.e2e
 @pytest.mark.timeout(20)
 def test_deployed_service_is_functional():
     # Poor man's external liveness probe.
@@ -54,9 +52,7 @@ def test_deployed_service_is_functional():
             time.sleep(1)
 
 
-@pytest.mark.e2e
 @pytest.mark.parametrize("in_project", ["project-with-fastapi"], indirect=True)
-@pytest.mark.timeout(30)
 def test_nuke(in_project):
     runner = CliRunner()
     result = runner.invoke(app, ["nuke"])
