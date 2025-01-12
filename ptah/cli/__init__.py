@@ -14,6 +14,7 @@ from ptah.clients import (
     Kind,
     Kubernetes,
     Project,
+    Ssh,
     Version,
     Yaml,
     get,
@@ -151,6 +152,14 @@ def _sync():
     with get(Sync).run():
         while True:
             time.sleep(1)
+
+
+@app.command()
+def ssh(app: str):
+    """
+    Find the first pod with provided app name; then SSH (`kubectl exec`) into it.
+    """
+    get(Ssh).run(app)
 
 
 # Create a "nicely named" Click command object for generated docs.
