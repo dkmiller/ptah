@@ -1,7 +1,7 @@
 [project]
 name = "ptah-cli"
 readme = "README.md"
-version = "0.6.0"
+version = "0.7.0"
 authors = [
     { name = "Dan Miller", email = "daniel.keegan.miller@gmail.com" }
 ]

@@ -9,5 +9,6 @@ from .kubernetes import Kubernetes
 from .panic import PtahPanic
 from .project import Project
 from .shell import Shell
+from .ssh import Ssh
 from .version import Version
 from .yaml import Yaml

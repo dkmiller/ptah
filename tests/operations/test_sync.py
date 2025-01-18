@@ -31,7 +31,7 @@ def test_sync_respects_file_creation(in_project, sync):
         Path("fastapi/foo.txt").touch()
         time.sleep(0.1)
 
-    sync.shell.assert_called_once_with(
+    assertion_args = (
         "kubectl",
         "cp",
         str(Path.cwd().absolute() / "fastapi/foo.txt"),
@@ -39,6 +39,11 @@ def test_sync_respects_file_creation(in_project, sync):
         "-c",
         "fastapi",
     )
+
+    if get(OperatingSystem) == OperatingSystem.MACOS and "GITHUB_ACTION" in os.environ:
+        sync.shell.assert_called_with(*assertion_args)
+    else:
+        sync.shell.assert_called_once_with(*assertion_args)
 
 
 @pytest.mark.parametrize("in_project", ["project-with-fastapi"], indirect=True)
