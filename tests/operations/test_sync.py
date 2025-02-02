@@ -7,7 +7,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from ptah.clients import get
+from ptah.clients import PtahPanic, get
 from ptah.models import OperatingSystem
 from ptah.operations import Sync
 
@@ -132,3 +132,10 @@ def test_sync_respects_file_movement(in_project, sync):
         "/srv/main.py",
         "/srv/main2.py",
     )
+
+
+@pytest.mark.parametrize("in_project", ["project-with-kind-config"], indirect=True)
+def test_sync_fails_when_no_copy_statements_exist(in_project, sync):
+    with pytest.raises(PtahPanic):
+        with sync.run():
+            pass

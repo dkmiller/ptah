@@ -6,7 +6,7 @@ from .forward import Forward
 from .helmfile import Helmfile
 from .kind import Kind
 from .kubernetes import Kubernetes
-from .panic import PtahPanic
+from .panic import Panic, PtahPanic
 from .project import Project
 from .shell import Shell
 from .ssh import Ssh

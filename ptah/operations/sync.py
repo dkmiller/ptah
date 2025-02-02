@@ -13,7 +13,7 @@ from watchdog import events
 from watchdog.events import FileModifiedEvent, FileSystemEventHandler
 from watchdog.observers import Observer
 
-from ptah.clients import Docker, Kubernetes, PtahPanic, Shell
+from ptah.clients import Docker, Kubernetes, Panic, PtahPanic, Shell
 from ptah.models import DockerImage
 
 
@@ -152,6 +152,7 @@ class Sync:
     console: Console
     docker: Docker
     kubernetes: Kubernetes
+    panic: Panic
     shell: Shell
 
     @contextmanager
@@ -182,6 +183,10 @@ class Sync:
                                 str(image.location.parent),
                                 recursive=True,
                             )
+        if not observer._handlers:
+            self.panic(
+                "No Docker COPY statements with absolute statements found or used"
+            )
 
         observer.start()
         try:
