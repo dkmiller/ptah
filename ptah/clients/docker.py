@@ -71,7 +71,7 @@ class Docker:
         root = self.filesystem.project_root()
         rv = []
         for path in root.rglob("*"):
-            if m := re.match(self.project.dockerfiles, str(path.relative_to(root))):
+            if m := re.search(self.project.dockerfiles, str(path.relative_to(root))):
                 image_name = self.image_name(path, m)
                 tag = self.image_tag(path)
                 rv.append(DockerImage(path, image_name, tag))
