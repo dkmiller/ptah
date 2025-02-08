@@ -146,3 +146,13 @@ def test_copy_statements_ignores_nonabsolute(project_cwd):
     images = docker.image_definitions()
     assert len(images) == 1
     assert docker.copy_statements(images[0]) == []
+
+
+def test_nested_directories_are_detected(project_cwd):
+    dir = project_cwd / "a/b/c"
+    dir.mkdir(parents=True, exist_ok=True)
+    (dir / "Dockerfile").touch()
+    docker = get(Docker)
+    assert docker.image_definitions() == [
+        DockerImage(dir / "Dockerfile", "c", "a5819ab")
+    ]
