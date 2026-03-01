@@ -73,7 +73,7 @@ jobs:
     - if: ${{ steps.singleton.outputs.value }}
       run: pytest -m e2e
 
-    - uses: actions/upload-artifact@v6
+    - uses: actions/upload-artifact@v7
       with:
         name: release-dists
         path: dist/
@@ -93,12 +93,12 @@ jobs:
 
     steps:
 
-    - uses: actions/download-artifact@v7
+    - uses: actions/download-artifact@v8
       with:
         name: release-dists
         path: dist/
 
-    -  uses: actions/attest-build-provenance@v3
+    -  uses: actions/attest-build-provenance@v4
        with:
          subject-path: dist/*.whl
 
